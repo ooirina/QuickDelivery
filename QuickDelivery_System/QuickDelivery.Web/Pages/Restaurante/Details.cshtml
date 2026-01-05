@@ -35,3 +35,24 @@
     <a asp-page="./Edit" asp-route-id="@Model.Restaurant.Id">Edit</a> |
     <a asp-page="./Index">Back to List</a>
 </div>
+<hr />
+<h3>Meniul Restaurantului</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Produs</th>
+            <th>Preț</th>
+            <th>Descriere</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Restaurant.Produse)
+        {
+            <tr>
+                <td>@item.Nume</td>
+                <td>@item.Pret RON</td>
+                <td>@item.Descriere</td>
+            </tr>
+        }
+    </tbody>
+</table>

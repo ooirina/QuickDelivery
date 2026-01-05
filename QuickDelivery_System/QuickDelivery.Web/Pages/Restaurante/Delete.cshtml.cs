@@ -44,16 +44,17 @@ namespace QuickDelivery.Web.Pages.Restaurante
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var restaurant = await _context.Restaurant.FindAsync(id);
+            var restaurant = await _context.Restaurant
+                .Include(r => r.Produse)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (restaurant != null)
             {
-                Restaurant = restaurant;
-                _context.Restaurant.Remove(Restaurant);
+                // Ștergem manual produsele acestui restaurant înainte de a șterge restaurantul
+                _context.Produs.RemoveRange(restaurant.Produse);
+                _context.Restaurant.Remove(restaurant);
                 await _context.SaveChangesAsync();
             }
 

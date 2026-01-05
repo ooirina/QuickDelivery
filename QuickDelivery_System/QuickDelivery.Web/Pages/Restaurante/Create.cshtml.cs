@@ -27,12 +27,31 @@ namespace QuickDelivery.Web.Pages.Restaurante
         [BindProperty]
         public Restaurant Restaurant { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        [BindProperty]
+        public IFormFile? Foto { get; set; } // Fișierul încărcat din formular
+
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return Page();
+
+            if (Foto != null)
             {
-                return Page();
+                // 1. Definim calea unde salvăm poza (wwwroot/images)
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+
+                // 2. Generăm un nume unic pentru fișier ca să nu se suprascrie
+                string numeFisier = Guid.NewGuid().ToString() + "_" + Foto.FileName;
+                string caleCompleta = Path.Combine(folder, numeFisier);
+
+                // 3. Salvăm fișierul pe disc
+                using (var stream = new FileStream(caleCompleta, FileMode.Create))
+                {
+                    await Foto.CopyToAsync(stream);
+                }
+
+                // 4. Salvăm în baza de date doar calea relativă
+                Restaurant.ImagineUrl = "/images/" + numeFisier;
             }
 
             _context.Restaurant.Add(Restaurant);

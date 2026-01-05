@@ -23,6 +23,8 @@ namespace QuickDelivery.Web.Pages.Restaurante
         [BindProperty]
         public Restaurant Restaurant { get; set; } = default!;
 
+        [BindProperty]
+        public IFormFile? Foto { get; set; }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -39,13 +41,34 @@ namespace QuickDelivery.Web.Pages.Restaurante
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return Page();
+
+            // 1. Căutăm restaurantul existent în baza de date fără a-l "urmări" (AsNoTracking) 
+            // ca să extragem calea pozei vechi
+            var restaurantDinDb = await _context.Restaurant.AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == Restaurant.Id);
+
+            if (Foto != null)
             {
-                return Page();
+                // Utilizatorul a ales o POZĂ NOUĂ
+                string folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                string numeFisier = Guid.NewGuid().ToString() + "_" + Foto.FileName;
+                string caleCompleta = Path.Combine(folder, numeFisier);
+
+                using (var stream = new FileStream(caleCompleta, FileMode.Create))
+                {
+                    await Foto.CopyToAsync(stream);
+                }
+
+                // Punem calea pozei noi
+                Restaurant.ImagineUrl = "/images/" + numeFisier;
+            }
+            else
+            {
+                // Utilizatorul NU a ales o poză, deci o păstrăm pe cea existentă
+                Restaurant.ImagineUrl = restaurantDinDb.ImagineUrl;
             }
 
             _context.Attach(Restaurant).State = EntityState.Modified;
@@ -56,14 +79,8 @@ namespace QuickDelivery.Web.Pages.Restaurante
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RestaurantExists(Restaurant.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!RestaurantExists(Restaurant.Id)) return NotFound();
+                else throw;
             }
 
             return RedirectToPage("./Index");

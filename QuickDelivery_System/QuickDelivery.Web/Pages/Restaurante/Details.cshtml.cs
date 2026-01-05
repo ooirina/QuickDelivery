@@ -23,20 +23,14 @@ namespace QuickDelivery.Web.Pages.Restaurante
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var restaurant = await _context.Restaurant.FirstOrDefaultAsync(m => m.Id == id);
-            if (restaurant == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Restaurant = restaurant;
-            }
+            // Includem produsele legate de acest restaurant folosind .Include
+            Restaurant = await _context.Restaurant
+                .Include(r => r.Produse)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Restaurant == null) return NotFound();
             return Page();
         }
     }

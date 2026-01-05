@@ -19,11 +19,27 @@ namespace QuickDelivery.Web.Pages.Restaurante
             _context = context;
         }
 
-        public IList<Restaurant> Restaurant { get;set; } = default!;
+        public IList<Restaurant> Restaurant { get; set; } = default!;
+
+        // Adăugăm proprietatea pentru string-ul de căutare
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
 
         public async Task OnGetAsync()
         {
-            Restaurant = await _context.Restaurant.ToListAsync();
+            // 1. Plecăm de la interogarea de bază
+            var restaurante = from r in _context.Restaurant
+                              select r;
+
+            // 2. Dacă utilizatorul a scris ceva în bara de căutare, filtrăm rezultatele
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                restaurante = restaurante.Where(s => s.Nume.Contains(SearchString)
+                                               || s.Adresa.Contains(SearchString));
+            }
+
+            // 3. Executăm interogarea și populăm lista
+            Restaurant = await restaurante.ToListAsync();
         }
     }
 }

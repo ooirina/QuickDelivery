@@ -2,47 +2,77 @@
 @model QuickDelivery.Web.Pages.Restaurante.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Restaurante Disponibile";
 }
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5 text-primary fw-bold">
+            <i class="bi bi-shop"></i> Restaurante QuickDelivery
+        </h1>
+        <a asp-page="Create" class="btn btn-success btn-lg shadow-sm">
+            <i class="bi bi-plus-circle"></i> Adaugă Restaurant
+        </a>
+    </div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant[0].Nume)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant[0].Adresa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Restaurant[0].ImagineUrl)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Restaurant) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nume)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImagineUrl)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @* Secțiunea de Search (Practică pentru nota 10) *@
+    <form method="get" class="mb-5">
+        <div class="input-group shadow-sm">
+            <input type="text" name="SearchString" class="form-control" placeholder="Caută un restaurant după nume..." />
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search"></i> Caută
+            </button>
+        </div>
+    </form>
+
+    @* Grid-ul de Carduri *@
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model.Restaurant)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 transition-hover">
+                    @* Imaginea Restaurantului *@
+                    <div style="height: 200px; overflow: hidden;" class="rounded-top">
+                        @if (!string.IsNullOrEmpty(item.ImagineUrl))
+                        {
+                            <img src="@item.ImagineUrl" class="card-img-top img-fluid w-100 h-100" style="object-fit: cover;" alt="@item.Nume">
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-dark">@item.Nume</h5>
+                        <p class="card-text text-muted">
+                            <i class="bi bi-geo-alt-fill text-danger"></i> @item.Adresa
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <div class="d-grid gap-2">
+                            <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-primary">
+                                <i class="bi bi-menu-button-wide"></i> Vezi Meniu
+                            </a>
+                            <div class="btn-group w-100 mt-2">
+                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editează</a>
+                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Șterge</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>

@@ -18,5 +18,6 @@ namespace QuickDelivery.Web.Data
         public DbSet<QuickDelivery.Web.Models.Comanda> Comanda { get; set; } = default!;
         public DbSet<QuickDelivery.Web.Models.Produs> Produs { get; set; } = default!;
         public DbSet<QuickDelivery.Web.Models.Restaurant> Restaurant { get; set; } = default!;
+        public DbSet<QuickDelivery.Web.Models.Recenzie> Recenzii { get; set; } = default!;
     }
 }

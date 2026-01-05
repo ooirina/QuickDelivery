@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using QuickDelivery.Web.Data;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddAuthorization();
+builder.Services.AddDbContext<QuickDeliveryWebContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QuickDeliveryWebContext") ?? throw new InvalidOperationException("Connection string 'QuickDeliveryWebContext' not found.")));
+
 
 var app = builder.Build();
 

@@ -1,0 +1,51 @@
+﻿@page
+@model QuickDelivery.Web.Pages.Comenzi.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Comanda</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Comanda.DataComanda" class="control-label"></label>
+                <input asp-for="Comanda.DataComanda" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Comanda.DataComanda" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Comanda.Status" class="control-label"></label>
+                <input asp-for="Comanda.Status" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Comanda.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Comanda.TotalPlata" class="control-label"></label>
+                <input asp-for="Comanda.TotalPlata" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Comanda.TotalPlata" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comanda.ClientId" class="control-label"></label>
+                <select asp-for="Comanda.ClientId" class ="form-control" asp-items="ViewBag.ClientId" ></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

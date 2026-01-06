@@ -10,7 +10,7 @@ namespace QuickDelivery.Web.Models
             public int Id { get; set; }
 
         [Required(ErrorMessage = "Produsul trebuie să aibă un nume.")]
-        [RegularExpression(@"^[A-Z][a-z/s]*$", ErrorMessage = "Numele trebuie să înceapă cu literă mare.")]
+        [RegularExpression(@"^[A-Z][a-zA-Z0-9\s]*$", ErrorMessage = "Numele trebuie să înceapă cu literă mare și poate conține litere, cifre și spații.")]
         public string Nume { get; set; }
 
         [Required]
@@ -27,8 +27,12 @@ namespace QuickDelivery.Web.Models
 
             // Proprietatea de navigare - Aici dispare eroarea dacă clasa Restaurant există
             [ForeignKey("RestaurantId")]
-            public virtual Restaurant Restaurant { get; set; }
-        }
+            public virtual Restaurant? Restaurant { get; set; }
+
+        [Display(Name = "Categorie")]
+        public int? CategorieId { get; set; }
+        public virtual Categorie? Categorie { get; set; }
+    }
     }
    
 

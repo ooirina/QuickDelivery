@@ -32,6 +32,8 @@ namespace QuickDelivery.Web.Pages.Restaurante
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("Restaurant.ImagineUrl");
+
             if (!ModelState.IsValid) return Page();
 
             if (Foto != null)

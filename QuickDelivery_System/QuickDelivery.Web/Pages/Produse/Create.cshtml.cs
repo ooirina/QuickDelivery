@@ -19,16 +19,25 @@ namespace QuickDelivery.Web.Pages.Produse
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(int? restId) 
         {
-        ViewData["RestaurantId"] = new SelectList(_context.Set<Restaurant>(), "Id", "Adresa");
+            // Dacă venim de pe pagina unui restaurant, restId va avea o valoare
+            if (restId.HasValue)
+            {
+                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume", restId.Value);
+
+                ViewData["CategorieId"] = new SelectList(_context.Categorie, "Id", "Nume");
+            }
+            else
+            {
+                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
+            }
+
             return Page();
         }
-
         [BindProperty]
         public Produs Produs { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickDelivery.Web.Data;
 
@@ -11,9 +12,11 @@ using QuickDelivery.Web.Data;
 namespace QuickDelivery.Web.Migrations
 {
     [DbContext(typeof(QuickDeliveryWebContext))]
-    partial class QuickDeliveryWebContextModelSnapshot : ModelSnapshot
+    [Migration("20260106135822_FixProdusValidation")]
+    partial class FixProdusValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,26 +24,6 @@ namespace QuickDelivery.Web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("QuickDelivery.Web.Models.Categorie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Iconita")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nume")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categorie");
-                });
 
             modelBuilder.Entity("QuickDelivery.Web.Models.Client", b =>
                 {
@@ -130,9 +113,6 @@ namespace QuickDelivery.Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategorieId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Descriere")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -149,8 +129,6 @@ namespace QuickDelivery.Web.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategorieId");
 
                     b.HasIndex("RestaurantId");
 
@@ -241,17 +219,11 @@ namespace QuickDelivery.Web.Migrations
 
             modelBuilder.Entity("QuickDelivery.Web.Models.Produs", b =>
                 {
-                    b.HasOne("QuickDelivery.Web.Models.Categorie", "Categorie")
-                        .WithMany("Produse")
-                        .HasForeignKey("CategorieId");
-
                     b.HasOne("QuickDelivery.Web.Models.Restaurant", "Restaurant")
                         .WithMany("Produse")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Categorie");
 
                     b.Navigation("Restaurant");
                 });
@@ -265,11 +237,6 @@ namespace QuickDelivery.Web.Migrations
                         .IsRequired();
 
                     b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("QuickDelivery.Web.Models.Categorie", b =>
-                {
-                    b.Navigation("Produse");
                 });
 
             modelBuilder.Entity("QuickDelivery.Web.Models.Client", b =>

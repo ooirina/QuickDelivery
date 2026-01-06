@@ -19,12 +19,21 @@ namespace QuickDelivery.Web.Pages.Produse
             _context = context;
         }
 
-        public IList<Produs> Produs { get;set; } = default!;
+        public IList<Produs> Produs { get; set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string? SearchString)
         {
-            Produs = await _context.Produs
-                .Include(p => p.Restaurant).ToListAsync();
+            var produse = from p in _context.Produs
+                          .Include(p => p.Restaurant)
+                          select p;
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                // Filtrăm produsele unde numele sau descrierea conțin categoria selectată
+                produse = produse.Where(s => s.Nume.Contains(SearchString) || s.Descriere.Contains(SearchString));
+            }
+
+            Produs = await produse.ToListAsync();
         }
     }
 }

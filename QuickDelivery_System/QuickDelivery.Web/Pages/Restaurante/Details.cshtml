@@ -1,58 +1,81 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Restaurante.DetailsModel
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Restaurant.Nume;
 }
 
-<h1>Details</h1>
+<div class="container mt-0">
+    @* 1. Header Restaurant cu Imagine de fundal *@
+    <div class="position-relative mb-5 rounded-bottom shadow"
+         style="height: 350px; background: url('@Model.Restaurant.ImagineUrl') no-repeat center center; background-size: cover;">
+        <div class="position-absolute bottom-0 start-0 w-100 p-4"
+             style="background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 .5rem .5rem;">
+            <h1 class="text-white display-4 fw-bold">@Model.Restaurant.Nume</h1>
+            <p class="text-white-50 fs-5 mb-0">
+                <i class="bi bi-geo-alt-fill text-danger"></i> @Model.Restaurant.Adresa
+            </p>
+        </div>
+    </div>
 
-<div>
-    <h4>Restaurant</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Restaurant.Nume)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Restaurant.Nume)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Restaurant.Adresa)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Restaurant.Adresa)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Restaurant.ImagineUrl)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Restaurant.ImagineUrl)
-        </dd>
-    </dl>
+    <div class="row">
+        @* 2. Coloana Stângă: Meniul (Produse) *@
+        <div class="col-md-8">
+            <h3 class="fw-bold mb-4"><i class="bi bi-list-ul"></i> Meniul Restaurantului</h3>
+
+            @if (Model.Restaurant.Produse != null && Model.Restaurant.Produse.Any())
+            {
+                <div class="row row-cols-1 g-3">
+                    @foreach (var p in Model.Restaurant.Produse)
+                    {
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm transition-hover">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold mb-1">@p.Nume</h5>
+                                        <p class="text-muted small mb-0">@p.Descriere</p>
+                                        <span class="badge bg-success mt-2 fs-6">@p.Pret RON</span>
+                                    </div>
+                                    <button class="btn btn-primary rounded-pill">
+                                        <i class="bi bi-plus-lg"></i> Adaugă
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">Acest restaurant nu are încă produse în meniu.</div>
+            }
+        </div>
+
+        @* 3. Coloana Dreaptă: Info & Acțiuni *@
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body text-center">
+                    <div class="d-grid gap-2">
+                        <a asp-page="./Edit" asp-route-id="@Model.Restaurant.Id" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Editează Restaurant
+                        </a>
+                        <a asp-page="/Produse/Create" asp-route-restId="@Model.Restaurant.Id" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Adaugă Produs în acest Meniu
+                        </a>
+                        <a asp-page="./Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Înapoi la listă
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Restaurant.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
-</div>
-<hr />
-<h3>Meniul Restaurantului</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Produs</th>
-            <th>Preț</th>
-            <th>Descriere</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Restaurant.Produse)
-        {
-            <tr>
-                <td>@item.Nume</td>
-                <td>@item.Pret RON</td>
-                <td>@item.Descriere</td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<style>
+
+    .transition-hover:hover {
+        transform: scale(1.02);
+        transition: 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+</style>

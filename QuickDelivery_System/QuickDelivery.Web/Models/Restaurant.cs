@@ -16,10 +16,9 @@ namespace QuickDelivery.Web.Models
         [StringLength(200)]
         public string Adresa { get; set; }
 
-        [Url(ErrorMessage = "Te rugăm să introduci un link valid pentru imagine.")]
-        [Display(Name = "Link Imagine")]
-        public string ImagineUrl { get; set; }
+        [Display(Name = "Imagine Restaurant")]
+        public string? ImagineUrl { get; set; }
         // Această proprietate permite accesul la lista de produse din acest restaurant 1:N
-        public virtual ICollection<Produs> Produse { get; set; }
+        public virtual ICollection<Produs>? Produse { get; set; }
     }
 }

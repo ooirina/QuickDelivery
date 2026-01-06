@@ -7,6 +7,7 @@
 
 <div class="container mt-4">
     <h1 class="display-5 text-primary"><i class="bi bi-shop"></i> Adaugă Restaurant</h1>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <hr />
 
     <div class="row shadow-sm p-4 bg-white rounded">
@@ -29,7 +30,7 @@
                 @* Am înlocuit input-ul text pentru ImagineUrl cu un input de tip File *@
                 <div class="form-group mb-4">
                     <label class="control-label fw-bold">Imagine Restaurant (Copertă)</label>
-                    <input type="file" name="Foto" class="form-control" accept="image/*" />
+                    <input type="file" id="uploadFoto" name="Foto" class="form-control" accept="image/*" />
                     <small class="text-muted">Alege o fotografie reprezentativă pentru restaurant.</small>
                 </div>
 
@@ -42,17 +43,27 @@
             </form>
         </div>
 
-        <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center">
-            <div class="text-center text-muted">
+        <div class="col-md-6 text-center">
+            <img id="previzualizare" src="#" alt="Previzualizare" class="img-thumbnail d-none" style="max-height: 300px;" />
+            <div id="placeholderText" class="text-muted">
                 <i class="bi bi-image-fill" style="font-size: 5rem; opacity: 0.2;"></i>
-                <p>Previzualizarea imaginii va apărea după salvare.</p>
+                <p>Previzualizarea va apărea aici după ce selectezi o poză.</p>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @{
+    @{ <script>
+    document.getElementById('uploadFoto').onchange = evt => {
+        const [file] = document.getElementById('uploadFoto').files;
+        if (file) {
+            document.getElementById('previzualizare').src = URL.createObjectURL(file);
+            document.getElementById('previzualizare').classList.remove('d-none');
+            document.getElementById('placeholderText').classList.add('d-none');
+        }
+    }
+</script>
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

@@ -22,6 +22,6 @@ namespace QuickDelivery.Web.Models
         public string Telefon { get; set; }
 
         // Relație: Un client poate avea mai multe comenzi
-        public virtual ICollection<Comanda> Comenzi { get; set; }
+        public virtual ICollection<Comanda>? Comenzi { get; set; }
     }
 }

@@ -1,48 +1,44 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Clienti.EditModel
 
-@{
-    ViewData["Title"] = "Edit";
-}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 p-4">
+                <div class="text-center mb-4">
+                    <div class="display-6 text-warning"><i class="bi bi-pencil-square"></i></div>
+                    <h2 class="fw-bold">Editează Profilul</h2>
+                    <p class="text-muted small">Modifică informațiile clientului @Model.Client.Nume</p>
+                </div>
 
-<h1>Edit</h1>
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    <input type="hidden" asp-for="Client.Id" />
 
-<h4>Client</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Client.Id" />
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Nume" class="control-label"></label>
-                <input asp-for="Client.Nume" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Nume" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="Client.Nume" class="form-label fw-bold">Nume Complet</label>
+                        <input asp-for="Client.Nume" class="form-control rounded-pill border-2" />
+                        <span asp-validation-for="Client.Nume" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Client.Email" class="form-label fw-bold">Email</label>
+                        <input asp-for="Client.Email" class="form-control rounded-pill border-2" />
+                        <span asp-validation-for="Client.Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Client.Telefon" class="form-label fw-bold">Telefon</label>
+                        <input asp-for="Client.Telefon" class="form-control rounded-pill border-2" />
+                        <span asp-validation-for="Client.Telefon" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg rounded-pill text-white shadow-sm">Actualizează Datele</button>
+                        <a asp-page="./Index" class="btn btn-link text-secondary">Renunță</a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Email" class="control-label"></label>
-                <input asp-for="Client.Email" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
-                <label asp-for="Client.Telefon" class="control-label"></label>
-                <input asp-for="Client.Telefon" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Client.Telefon" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

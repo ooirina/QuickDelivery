@@ -1,0 +1,50 @@
+﻿@page
+@model QuickDelivery.Web.Pages.Categorii.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Categorie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Categorie.Id" />
+            <div class="form-group">
+<span class="text-danger">*</span>
+                <label asp-for="Categorie.Nume" class="control-label"></label>
+                <input asp-for="Categorie.Nume" class="form-control" aria-required="true"/>
+                <span asp-validation-for="Categorie.Nume" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Categorie.Iconita" class="form-label fw-bold">Nume Fișier Imagine</label>
+                <input asp-for="Categorie.Iconita" class="form-control" placeholder="Ex: sushi.png" />
+
+                @* Previzualizare imagine curentă *@
+                @if (!string.IsNullOrEmpty(Model.Categorie.Iconita))
+                {
+                    <div class="mt-2">
+                        <span class="small d-block mb-1">Previzualizare curentă:</span>
+                        <img src="~/images/categorii/@Model.Categorie.Iconita" style="width: 50px; height: 50px; object-fit: contain;" class="border rounded p-1 shadow-sm" />
+                    </div>
+                }
+                <span asp-validation-for="Categorie.Iconita" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

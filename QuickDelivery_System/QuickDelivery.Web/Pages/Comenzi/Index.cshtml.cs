@@ -24,7 +24,10 @@ namespace QuickDelivery.Web.Pages.Comenzi
         public async Task OnGetAsync()
         {
             Comanda = await _context.Comanda
-                .Include(c => c.Client).ToListAsync();
+                .Include(c => c.Client)
+        .Include(c => c.Restaurant)
+        .Include(c => c.Produs)
+        .ToListAsync();
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
 
-namespace QuickDelivery.Web.Pages.Produse
+namespace QuickDelivery.Web.Pages.Categorii
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace QuickDelivery.Web.Pages.Produse
         }
 
         [BindProperty]
-        public Produs Produs { get; set; } = default!;
+        public Categorie Categorie { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,27 +30,25 @@ namespace QuickDelivery.Web.Pages.Produse
                 return NotFound();
             }
 
-            var produs =  await _context.Produs.FirstOrDefaultAsync(m => m.Id == id);
-            if (produs == null)
+            var categorie =  await _context.Categorie.FirstOrDefaultAsync(m => m.Id == id);
+            if (categorie == null)
             {
                 return NotFound();
             }
-            Produs = produs;
-           ViewData["RestaurantId"] = new SelectList(_context.Set<Restaurant>(), "Id", "Adresa");
-            ViewData["CategorieId"] = new SelectList(_context.Categorie, "Id", "Nume");
+            Categorie = categorie;
             return Page();
         }
 
-              public async Task<IActionResult> OnPostAsync()
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
-                ViewData["CategorieId"] = new SelectList(_context.Categorie, "Id", "Nume");
                 return Page();
             }
 
-            _context.Attach(Produs).State = EntityState.Modified;
+            _context.Attach(Categorie).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +56,7 @@ namespace QuickDelivery.Web.Pages.Produse
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProdusExists(Produs.Id))
+                if (!CategorieExists(Categorie.Id))
                 {
                     return NotFound();
                 }
@@ -71,9 +69,9 @@ namespace QuickDelivery.Web.Pages.Produse
             return RedirectToPage("./Index");
         }
 
-        private bool ProdusExists(int id)
+        private bool CategorieExists(int id)
         {
-            return _context.Produs.Any(e => e.Id == id);
+            return _context.Categorie.Any(e => e.Id == id);
         }
     }
 }

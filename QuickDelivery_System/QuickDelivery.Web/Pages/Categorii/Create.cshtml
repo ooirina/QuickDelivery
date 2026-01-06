@@ -1,0 +1,33 @@
+﻿@page
+@model QuickDelivery.Web.Pages.Categorii.CreateModel
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h3 class="fw-bold text-center mb-4">Adaugă Categorie</h3>
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Categorie.Nume" class="form-label fw-bold"></label>
+                        <input asp-for="Categorie.Nume" class="form-control" placeholder="Ex: Pizza" />
+                        <span asp-validation-for="Categorie.Nume" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Categorie.Iconita" class="form-label fw-bold">Nume Fișier Imagine</label>
+                        <input type="file" name="imagineIncarcata" class="form-control" accept="image/*" />
+                        <div class="form-text small">Alege o fotografie reprezentativă (PNG/JPG).</div>
+                        <span asp-validation-for="Categorie.Iconita" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill">Salvează</button>
+                        <a asp-page="Index" class="btn btn-link text-secondary">Înapoi la listă</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -31,6 +31,7 @@ namespace QuickDelivery.Web.Pages.Produse
             else
             {
                 ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
+                ViewData["CategorieId"] = new SelectList(_context.Categorie, "Id", "Nume");
             }
 
             return Page();
@@ -42,6 +43,8 @@ namespace QuickDelivery.Web.Pages.Produse
         {
             if (!ModelState.IsValid)
             {
+                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
+                ViewData["CategorieId"] = new SelectList(_context.Categorie, "Id", "Nume");
                 return Page();
             }
 

@@ -8,6 +8,7 @@
 <h1>Create</h1>
 
 <h4>Comanda</h4>
+<div asp-validation-summary="All" class="text-danger"></div>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,11 +20,13 @@
                 <input asp-for="Comanda.DataComanda" class="form-control" aria-required="true"/>
                 <span asp-validation-for="Comanda.DataComanda" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Comanda.Status" class="control-label"></label>
-                <input asp-for="Comanda.Status" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Comanda.Status" class="text-danger"></span>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Status Comandă</label>
+                <select asp-for="Comanda.Statut" class="form-select rounded-pill">
+                    <option value="În Preparare">În Preparare</option>
+                    <option value="În Livrare">În Livrare</option>
+                    <option value="Livrată">Livrată</option>
+                </select>
             </div>
             <div class="form-group">
                 <span class="text-danger">*</span>
@@ -31,9 +34,13 @@
                 <input asp-for="Comanda.TotalPlata" class="form-control" aria-required="true"/>
                 <span asp-validation-for="Comanda.TotalPlata" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Comanda.ClientId" class="control-label"></label>
-                <select asp-for="Comanda.ClientId" class ="form-control" asp-items="ViewBag.ClientId" ></select>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Client</label>
+                @* populat din baza de date *@
+                <select asp-for="Comanda.ClientId" class="form-select rounded-pill" asp-items="ViewBag.ClientId">
+                    <option value="">-- Selectează Clientul --</option>
+                </select>
+                <span asp-validation-for="Comanda.ClientId" class="text-danger small"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

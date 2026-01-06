@@ -27,7 +27,7 @@
 
         .footer {
             background-color: #ffffff;
-            line-height: 40px; /* Înălțime redusă */
+            line-height: 20px; /* Înălțime redusă */
             width: 100%;
             white-space: nowrap;
         }
@@ -37,7 +37,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                @* Logo-ul tip Glovo/Bolt Food *@
+                @* Logo-ul *@
                 <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">
                     <i class="bi bi-lightning-fill text-warning"></i> QuickDelivery
                 </a>
@@ -59,6 +59,16 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Clienti/Index">Clienți</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Categorii/Index"> Categorii</a>
+                        
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Comenzi/Index"> Comenzi</a>
+
                         </li>
                     </ul>
                     @* Un buton de "Coș" simulat pentru aspect profesional *@

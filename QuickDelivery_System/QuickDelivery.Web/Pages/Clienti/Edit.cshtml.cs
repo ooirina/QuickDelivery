@@ -56,7 +56,7 @@ namespace QuickDelivery.Web.Pages.Clienti
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClientExists(Client.Id))
+                if (!_context.Client.Any(e => e.Id == Client.Id))
                 {
                     return NotFound();
                 }

@@ -37,6 +37,13 @@
                     </select>
                     <span asp-validation-for="Produs.RestaurantId" class="text-danger"></span>
                 </div>
+                <div class="form-group mb-3">
+                    <label class="fw-bold">Categorie Produs</label>
+                    <select asp-for="Produs.CategorieId" class="form-select border-primary shadow-sm" asp-items="ViewBag.CategorieId">
+                        <option value="">-- Selectează Categoria --</option>
+                    </select>
+                    <span asp-validation-for="Produs.CategorieId" class="text-danger"></span>
+                </div>
 
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-success btn-lg">Salvează Produsul</button>

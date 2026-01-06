@@ -1,54 +1,67 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Comenzi.IndexModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Istoric Comenzi</h2>
+        <a asp-page="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
+            <i class="bi bi-cart-plus-fill me-2"></i>Comandă Nouă
+        </a>
+    </div>
 
-<h1>Index</h1>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Data Comenzii</th>
+                        <th>Client</th>
+                        <th>Restaurant</th>
+                        <th>Produs</th>
+                        <th>Statut</th> 
+                        <th class="text-center">Total</th>
+                        <th class="text-end pe-4">Acțiuni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Comanda)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold">@item.DataComanda.ToString("dd MMM yyyy")</div>
+                                <div class="text-muted small">@item.DataComanda.ToString("HH:mm")</div>
+                            </td>
+                            <td><span class="badge bg-info text-dark rounded-pill">@item.Client?.Nume</span></td>
+                            <td><span class="fw-bold text-primary">@item.Restaurant?.Nume</span></td>
+                            <td>@item.Produs?.Nume</td>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Comanda[0].DataComanda)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comanda[0].Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comanda[0].TotalPlata)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comanda[0].Client)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Comanda) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataComanda)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPlata)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Email)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                            @* coloana statut *@
+                            <td>
+                                @{
+                                    var badgeClass = item.Statut switch
+                                    {
+                                        "Preluată" => "bg-primary",
+                                        "În Preparare" => "bg-info text-dark",
+                                        "În Livrare" => "bg-warning text-dark",
+                                        "Livrată" => "bg-success",
+                                        "Anulată" => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass rounded-pill">@item.Statut</span>
+                            </td>
+
+                            <td class="text-center fw-bold text-success">@item.Produs?.Pret.ToString("N2") RON</td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group shadow-sm rounded-pill bg-white p-1">
+                                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0 rounded-circle me-1"><i class="bi bi-eye"></i></a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger border-0 rounded-circle"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

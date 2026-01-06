@@ -33,6 +33,9 @@ namespace QuickDelivery.Web.Pages.Comenzi
         {
             if (!ModelState.IsValid)
             {
+                ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Nume");
+                ViewData["ProdusId"] = new SelectList(_context.Produs, "Id", "Nume");
+                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
                 return Page();
             }
 

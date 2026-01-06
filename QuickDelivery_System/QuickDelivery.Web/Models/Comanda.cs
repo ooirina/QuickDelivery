@@ -26,8 +26,11 @@ namespace QuickDelivery.Web.Models
 
         [ForeignKey("ClientId")]
         public virtual Client Client { get; set; }
+        public string Statut { get; set; }
 
         // Relație: O comandă are mai multe produse (prin DetaliiComanda)
-        public virtual ICollection<DetaliiComanda> DetaliiComenzi { get; set; }
+        public virtual ICollection<DetaliiComanda>? DetaliiComenzi { get; set; }
+        public Restaurant? Restaurant { get; set; }
+        public Produs? Produs { get; set; }
     }
 }

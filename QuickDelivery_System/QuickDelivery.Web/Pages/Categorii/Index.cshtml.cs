@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
 
-namespace QuickDelivery.Web.Pages.Clienti
+namespace QuickDelivery.Web.Pages.Categorii
 {
     public class IndexModel : PageModel
     {
@@ -19,16 +19,11 @@ namespace QuickDelivery.Web.Pages.Clienti
             _context = context;
         }
 
-        // Aceasta este lista care va fi afișată în tabel
-        public IList<Client> Client { get; set; } = default!;
+        public IList<Categorie> Categorie { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            // Verificăm dacă baza de date are tabelul Clienți și îl încărcăm
-            if (_context.Client != null)
-            {
-                Client = await _context.Client.ToListAsync();
-            }
+            Categorie = await _context.Categorie.ToListAsync();
         }
     }
 }

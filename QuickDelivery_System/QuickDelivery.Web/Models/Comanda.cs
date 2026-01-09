@@ -15,22 +15,25 @@ namespace QuickDelivery.Web.Models
 
         [Required]
         [Display(Name = "Status Comandă")]
-        public string Status { get; set; } // Ex: "In preparare", "In livrare", "Finalizata"
+        public string Status { get; set; } // Ex:"In preparare", "In livrare", "Finalizata"
 
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalPlata { get; set; }
+        public int Cantitate { get; set; } = 1;
+        
+        [Required, StringLength(100)]
+        public string AdresaLivrare { get; set; }
 
         // Legătura cu Clientul
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
 
         [ForeignKey("ClientId")]
-        public virtual Client Client { get; set; }
-        public string Statut { get; set; }
+        public virtual Client? Client { get; set; }
 
-        // Relație: O comandă are mai multe produse (prin DetaliiComanda)
-        public virtual ICollection<DetaliiComanda>? DetaliiComenzi { get; set; }
+        [ForeignKey("RestaurantId")]
+        public int? RestaurantId { get; set; }
         public Restaurant? Restaurant { get; set; }
+        [ForeignKey("ProdusId")]
+        public int? ProdusId { get; set; }
         public Produs? Produs { get; set; }
     }
 }

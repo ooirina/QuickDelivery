@@ -11,7 +11,7 @@ namespace QuickDelivery.Web.Models
         public string Nume { get; set; }
 
         [Display(Name = "Iconiță (Bootstrap Icon)")]
-        public string? Iconita { get; set; } // Exemplu: bi-pizza, bi-cup-straw
+        public string? Iconita { get; set; } 
 
         public virtual ICollection<Produs>? Produse { get; set; }
     }

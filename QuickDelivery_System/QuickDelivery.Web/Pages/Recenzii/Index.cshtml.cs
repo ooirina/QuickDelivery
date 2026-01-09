@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
 
-namespace QuickDelivery.Web.Pages.Comenzi
+namespace QuickDelivery.Web.Pages.Recenzii
 {
     public class IndexModel : PageModel
     {
@@ -19,15 +19,13 @@ namespace QuickDelivery.Web.Pages.Comenzi
             _context = context;
         }
 
-        public IList<Comanda> Comanda { get;set; } = default!;
+        public IList<Recenzie> Recenzie { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Comanda = await _context.Comanda
-         .Include(c => c.Client)
-        .Include(c => c.Restaurant)
-        .Include(c => c.Produs)
-        .ToListAsync();
+            Recenzie = await _context.Recenzii
+                .Include(r => r.Client)
+                .Include(r => r.Restaurant).ToListAsync();
         }
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuickDelivery.Web.Pages.Comenzi
 {
@@ -20,8 +23,15 @@ namespace QuickDelivery.Web.Pages.Comenzi
         }
 
         public IActionResult OnGet()
-        {
-        ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
+        {  //Încărcăm clienții și restaurantele normal
+            ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Nume");
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
+           // Pentru produse: le luăm din bază împreună cu datele restaurantului lor
+             var listaProduse = _context.Produs.Include(p => p.Restaurant).ToList();
+
+            // Creăm SelectList-ul cu un parametru în plus pentru gruparea după numele restaurantului
+            // Parametrii sunt: (sursa, valoare, text afișat, selectat, numele câmpului de grupare)
+            ViewData["ProdusId"] = new SelectList(listaProduse, "Id", "Nume", null, "Restaurant.Nume");
             return Page();
         }
 

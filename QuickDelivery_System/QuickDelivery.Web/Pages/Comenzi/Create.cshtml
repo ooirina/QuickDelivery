@@ -1,49 +1,65 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Comenzi.CreateModel
 
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h1>Create</h1>
-
-<h4>Comanda</h4>
-<div asp-validation-summary="All" class="text-danger"></div>
+<h4>Creează Comandă Nouă</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
+
+            <div class="form-group mb-3">
                 <label asp-for="Comanda.DataComanda" class="control-label"></label>
-                <input asp-for="Comanda.DataComanda" class="form-control" aria-required="true"/>
+                <input asp-for="Comanda.DataComanda" class="form-control" />
                 <span asp-validation-for="Comanda.DataComanda" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Status Comandă</label>
-                <select asp-for="Comanda.Statut" class="form-select rounded-pill">
-                    <option value="În Preparare">În Preparare</option>
-                    <option value="În Livrare">În Livrare</option>
-                    <option value="Livrată">Livrată</option>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Client</label>
+                <select asp-for="Comanda.ClientId" class="form-control" asp-items="ViewBag.ClientId">
+                    <option value="">-- Selectează Client --</option>
                 </select>
             </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="Comanda.TotalPlata" class="control-label"></label>
-                <input asp-for="Comanda.TotalPlata" class="form-control" aria-required="true"/>
-                <span asp-validation-for="Comanda.TotalPlata" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label class="form-label fw-bold">Client</label>
-                @* populat din baza de date *@
-                <select asp-for="Comanda.ClientId" class="form-select rounded-pill" asp-items="ViewBag.ClientId">
-                    <option value="">-- Selectează Clientul --</option>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Restaurant</label>
+                <select asp-for="Comanda.RestaurantId" class="form-control" asp-items="ViewBag.RestaurantId">
+                    <option value="">-- Selectează Restaurant --</option>
                 </select>
-                <span asp-validation-for="Comanda.ClientId" class="text-danger small"></span>
             </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label">Produs</label>
+                <select asp-for="Comanda.ProdusId" class="form-control" asp-items="ViewBag.ProdusId">
+                    <option value="">-- Selectează Produs --</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.Cantitate" class="control-label"></label>
+                <input asp-for="Comanda.Cantitate" class="form-control" />
+                <span asp-validation-for="Comanda.Cantitate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.AdresaLivrare" class="control-label"></label>
+                <input asp-for="Comanda.AdresaLivrare" class="form-control" />
+                <span asp-validation-for="Comanda.AdresaLivrare" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.Status" class="control-label"></label>
+                <select asp-for="Comanda.Status" class="form-control">
+                    <option value="Preluată">Preluată</option>
+                    <option value="În preparare">În preparare</option>
+                    <option value="În livrare">În livrare</option>
+                    <option value="Finalizată">Finalizată</option>
+                </select>
+            </div>
+
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Creează Comandă" class="btn btn-primary" />
+                <a asp-page="Index" class="btn btn-secondary">Înapoi la Listă</a>
             </div>
         </form>
     </div>

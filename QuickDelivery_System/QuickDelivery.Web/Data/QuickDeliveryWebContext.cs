@@ -20,5 +20,17 @@ namespace QuickDelivery.Web.Data
         public DbSet<QuickDelivery.Web.Models.Restaurant> Restaurant { get; set; } = default!;
         public DbSet<QuickDelivery.Web.Models.Recenzie> Recenzii { get; set; } = default!;
         public DbSet<QuickDelivery.Web.Models.Categorie> Categorie { get; set; } = default!;
+       
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Această instrucțiune oprește ștergerea în lanț care blochează migrarea
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+        }
+
     }
 }

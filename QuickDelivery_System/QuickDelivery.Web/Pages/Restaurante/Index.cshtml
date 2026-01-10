@@ -10,9 +10,12 @@
         <h1 class="display-5 text-primary fw-bold">
             <i class="bi bi-shop"></i> Restaurante QuickDelivery
         </h1>
-        <a asp-page="Create" class="btn btn-success btn-lg shadow-sm">
-            <i class="bi bi-plus-circle"></i> Adaugă Restaurant
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-page="Create" class="btn btn-success btn-lg shadow-sm">
+                <i class="bi bi-plus-circle"></i> Adaugă Restaurant
         </a>
+        }
     </div>
 
     @* Secțiunea de Search (Practică pentru nota 10) *@
@@ -57,10 +60,13 @@
                             <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-outline-primary">
                                 <i class="bi bi-menu-button-wide"></i> Vezi Meniu
                             </a>
-                            <div class="btn-group w-100 mt-2">
-                                <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editează</a>
-                                <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Șterge</a>
-                            </div>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <div class="btn-group w-100 mt-2">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">Editează</a>
+                                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Șterge</a>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

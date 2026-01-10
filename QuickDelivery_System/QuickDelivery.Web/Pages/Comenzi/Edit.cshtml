@@ -14,35 +14,68 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Comanda.Id" />
-            <div class="form-group">
-<span class="text-danger">*</span>
+
+            @* Păstrăm ClientId ascuns pentru ca modelul să rămână valid la salvare *@
+            <input type="hidden" asp-for="Comanda.ClientId" />
+
+            <div class="form-group mb-3">
                 <label asp-for="Comanda.DataComanda" class="control-label"></label>
-                <input asp-for="Comanda.DataComanda" class="form-control" aria-required="true"/>
+                <input asp-for="Comanda.DataComanda" class="form-control" />
                 <span asp-validation-for="Comanda.DataComanda" class="text-danger"></span>
             </div>
-            <div class="form-group">
-<span class="text-danger">*</span>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.RestaurantId" class="control-label">Restaurant</label>
+                <select asp-for="Comanda.RestaurantId" class="form-control" asp-items="ViewBag.RestaurantId"></select>
+                <span asp-validation-for="Comanda.RestaurantId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.ProdusId" class="control-label">Mâncare (Produs)</label>
+                <select asp-for="Comanda.ProdusId" class="form-control" asp-items="ViewBag.ProdusId"></select>
+                <span asp-validation-for="Comanda.ProdusId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.Cantitate" class="control-label"></label>
+                <input asp-for="Comanda.Cantitate" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Comanda.Cantitate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Comanda.AdresaLivrare" class="control-label">Adresa de Livrare</label>
+                <input asp-for="Comanda.AdresaLivrare" class="form-control" />
+                <span asp-validation-for="Comanda.AdresaLivrare" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
                 <label asp-for="Comanda.Status" class="control-label"></label>
-                <input asp-for="Comanda.Status" class="form-control" aria-required="true"/>
+                @if (User.IsInRole("Admin"))
+                {
+                    @* Adminul poate schimba statutul dintr-o listă *@
+                    <select asp-for="Comanda.Status" class="form-control">
+                        <option value="In preparare">In preparare</option>
+                        <option value="In livrare">In livrare</option>
+                        <option value="Finalizata">Finalizata</option>
+                    </select>
+                }
+                else
+                {
+                    @* Clientul vede statutul fără să-l poată modifica *@
+                    <input asp-for="Comanda.Status" class="form-control" readonly />
+                }
                 <span asp-validation-for="Comanda.Status" class="text-danger"></span>
             </div>
-           
-            <div class="form-group">
-                <label asp-for="Comanda.ClientId" class="control-label"></label>
-                <select asp-for="Comanda.ClientId" class="form-control" asp-items="ViewBag.ClientId" ></select>
-                <span asp-validation-for="Comanda.ClientId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+
+            <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

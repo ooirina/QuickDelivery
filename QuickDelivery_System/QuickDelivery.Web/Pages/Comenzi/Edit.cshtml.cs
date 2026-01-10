@@ -30,13 +30,33 @@ namespace QuickDelivery.Web.Pages.Comenzi
                 return NotFound();
             }
 
-            var comanda =  await _context.Comanda.FirstOrDefaultAsync(m => m.Id == id);
+            // Folosim .Include(c => c.Client) pentru a putea accesa email-ul clientului asociat comenzii
+            var comanda = await _context.Comanda
+                .Include(c => c.Client)
+                .Include(c => c.Restaurant)
+                .Include(c => c.Produs)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (comanda == null)
             {
                 return NotFound();
             }
+
+            // --- LOGICA DE SECURITATE ---
+            // Preluăm email-ul utilizatorului care este logat în acest moment
+            var userEmail = User.Identity.Name;
+
+            // Verificăm: dacă utilizatorul NU este Admin ȘI email-ul comenzii nu corespunde cu email-ul lui
+            if (!User.IsInRole("Admin") && comanda.Client.Email != userEmail)
+            {
+                // Îi blocăm accesul dacă încearcă să editeze comanda altcuiva
+                return Forbid();
+            }
+           
             Comanda = comanda;
            ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
+            ViewData["ProdusId"] = new SelectList(_context.Produs, "Id", "Nume");
             return Page();
         }
 
@@ -49,6 +69,34 @@ namespace QuickDelivery.Web.Pages.Comenzi
                 return Page();
             }
 
+            // 1. Preluăm comanda originală din baza de date pentru a verifica proprietarul
+            // Folosim .AsNoTracking() pentru a nu intra în conflict cu obiectul care va fi atașat ulterior
+            var comandaOriginala = await _context.Comanda
+                .Include(c => c.Client)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == Comanda.Id);
+
+            if (comandaOriginala == null)
+            {
+                return NotFound();
+            }
+
+            // 2. LOGICA DE SECURITATE: Verificăm dacă utilizatorul are dreptul să modifice această comandă
+            var userEmail = User.Identity.Name;
+            if (!User.IsInRole("Admin") && comandaOriginala.Client.Email != userEmail)
+            {
+                return Forbid(); // Clientul încearcă să modifice comanda altcuiva
+            }
+
+            // 3. Dacă utilizatorul este CLIENT, forțăm păstrarea valorilor pe care nu are voie să le schimbe
+            if (!User.IsInRole("Admin"))
+            {
+                Comanda.Status = comandaOriginala.Status;   // Clientul nu poate schimba Statusul
+                Comanda.ClientId = comandaOriginala.ClientId; // Clientul nu poate atribui comanda altcuiva
+                Comanda.DataComanda = comandaOriginala.DataComanda; // De regulă, data rămâne neschimbată
+            }
+
+            // 4. Atașăm obiectul modificat și salvăm
             _context.Attach(Comanda).State = EntityState.Modified;
 
             try

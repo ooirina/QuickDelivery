@@ -42,9 +42,12 @@
     @* 2. Header Listă Produse *@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">Produse disponibile</h2>
+        @if (User.IsInRole("Admin"))
+          {
         <a asp-page="Create" class="btn btn-success rounded-pill px-4">
             <i class="bi bi-plus-lg"></i> Adaugă Produs
         </a>
+           }
     </div>
 
     @* 3. Grid Produse *@
@@ -64,10 +67,13 @@
                             <span class="small fw-bold">@item.Restaurant?.Nume</span>
                         </div>
                     </div>
-                    <div class="card-footer bg-white border-0 pb-3 d-flex gap-2">
-                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1">Editează</a>
-                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill flex-grow-1">Șterge</a>
-                    </div>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <div class="card-footer bg-white border-0 pb-3 d-flex gap-2">
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1">Editează</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill flex-grow-1">Șterge</a>
+                        </div>
+                    }
                 </div>
             </div>
         }

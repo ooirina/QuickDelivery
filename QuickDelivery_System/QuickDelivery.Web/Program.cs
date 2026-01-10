@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -11,8 +12,34 @@ builder.Services.AddAuthorization();
 builder.Services.AddDbContext<QuickDeliveryWebContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("QuickDeliveryWebContext") ?? throw new InvalidOperationException("Connection string 'QuickDeliveryWebContext' not found.")));
 
+// 1. Contextul pentru datele aplicației (Restaurante, Produse etc.)
+builder.Services.AddDbContext<QuickDeliveryWebContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QuickDeliveryWebContext") ?? throw new InvalidOperationException("Connection string 'QuickDeliveryWebContext' not found.")));
+
+// 2. Contextul pentru Securitate (Identity) - conform punctului 16 din Lab 5
+builder.Services.AddDbContext<IdentityContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QuickDeliveryWebContext")));
+
+// 3. Configurare Identity cu ROLURI
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>() // Esențial pentru a avea Admin și Client separat
+    .AddEntityFrameworkStores<IdentityContext>();
 
 var app = builder.Build();
+
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Verificăm dacă rolul "Admin" există, dacă nu, îl creăm
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+}
 
 using (var scope = app.Services.CreateScope())
 {
@@ -101,6 +128,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

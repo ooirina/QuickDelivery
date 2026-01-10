@@ -61,6 +61,8 @@
                             </td>
                             <td class="text-end pe-4">
                                 <div class="btn-group shadow-sm rounded-pill bg-white p-1">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning border-0 rounded-circle me-1" title="Editează">
+                                        <i class="bi bi-pencil"></i> </a>
                                     <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0 rounded-circle me-1"><i class="bi bi-eye"></i></a>
                                     <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger border-0 rounded-circle"><i class="bi bi-trash"></i></a>
                                 </div>

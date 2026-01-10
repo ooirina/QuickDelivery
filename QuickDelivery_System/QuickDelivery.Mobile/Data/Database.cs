@@ -31,6 +31,12 @@ namespace QuickDelivery.Mobile.Data
         {
             return _database.UpdateAsync(item);
         }
+        public Task<int> ClearHistoryAsync()
+        {
+            return _database.DeleteAllAsync<OrderHistory>();
+        }
+
+
 
     }
 }

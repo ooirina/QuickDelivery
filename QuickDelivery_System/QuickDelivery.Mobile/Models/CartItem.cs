@@ -17,6 +17,6 @@ namespace QuickDelivery.Mobile.Models
         public decimal Pret { get; set; }
         public int Cantitate { get; set; }
         public int RestaurantId { get; set; } 
-        public string RestaurantName { get; set; }
+        public string RestaurantName { get; set; }=string.Empty;
     }
 }

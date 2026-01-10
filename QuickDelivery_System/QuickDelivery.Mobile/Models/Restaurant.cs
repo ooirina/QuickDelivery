@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,12 @@ namespace QuickDelivery.Mobile.Models
         public string Adresa { get; set; } = string.Empty;
 
         public string ImagineUrl { get; set; } = string.Empty;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
+        // calculat local (nu vine din DB)
+        [Ignore]
+        public double DistantaKm { get; set; }
+        public int CategorieId { get; internal set; }
     }
 }

@@ -29,16 +29,30 @@ namespace QuickDelivery.Web.Pages.Comenzi
                 return NotFound();
             }
 
-            var comanda = await _context.Comanda.FirstOrDefaultAsync(m => m.Id == id);
+            // Adăugăm .Include(c => c.Client) pentru a putea verifica proprietarul comenzii
+            var comanda = await _context.Comanda
+                .Include(c => c.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (comanda == null)
             {
                 return NotFound();
             }
-            else
+
+            // --- LOGICA DE SECURITATE ---
+            // Preluăm email-ul utilizatorului logat
+            var userEmail = User.Identity.Name;
+
+            // Dacă utilizatorul NU este Admin ȘI email-ul clientului din comandă NU este cel al utilizatorului logat
+            if (!User.IsInRole("Admin") && comanda.Client.Email != userEmail)
             {
-                Comanda = comanda;
+                // Blocăm accesul la pagina de ștergere
+                return Forbid();
             }
+            // ----------------------------
+
+            Comanda = comanda;
+
             return Page();
         }
 

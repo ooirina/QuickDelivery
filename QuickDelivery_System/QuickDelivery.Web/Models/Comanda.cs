@@ -15,7 +15,7 @@ namespace QuickDelivery.Web.Models
 
         [Required]
         [Display(Name = "Status Comandă")]
-        public string Status { get; set; } // Ex:"In preparare", "In livrare", "Finalizata"
+        public string Status { get; set; } = "In preparare";// Ex:"In preparare", "In livrare", "Finalizata"
 
         [Required]
         public int Cantitate { get; set; } = 1;

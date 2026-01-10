@@ -29,19 +29,32 @@ namespace QuickDelivery.Web.Pages.Recenzii
                 return NotFound();
             }
 
-            var recenzie = await _context.Recenzii.FirstOrDefaultAsync(m => m.Id == id);
+            // Adăugăm .Include(r => r.Client) pentru a putea verifica email-ul autorului
+            var recenzie = await _context.Recenzii
+                .Include(r => r.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (recenzie == null)
             {
                 return NotFound();
             }
-            else
+
+            // --- LOGICA DE SECURITATE ---
+            // Preluăm email-ul utilizatorului logat
+            var userEmail = User.Identity.Name;
+
+            // Dacă utilizatorul NU este Admin ȘI email-ul autorului recenziei NU coincide cu cel logat
+            if (!User.IsInRole("Admin") && recenzie.Client.Email != userEmail)
             {
-                Recenzie = recenzie;
+                // Blocăm accesul la pagina de ștergere
+                return Forbid();
             }
+            // ----------------------------
+
+            Recenzie = recenzie;
+
             return Page();
         }
-
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null)

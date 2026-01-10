@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuickDelivery.Web.Pages.Comenzi
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly QuickDelivery.Web.Data.QuickDeliveryWebContext _context;
@@ -47,6 +49,10 @@ namespace QuickDelivery.Web.Pages.Comenzi
                 ViewData["ProdusId"] = new SelectList(_context.Produs, "Id", "Nume");
                 ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
                 return Page();
+            }
+            if (!User.IsInRole("Admin"))
+            {
+                Comanda.Status = "In preparare"; // Valoare implicită pentru clienți
             }
 
             _context.Comanda.Add(Comanda);

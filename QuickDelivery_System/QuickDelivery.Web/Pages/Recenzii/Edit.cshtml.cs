@@ -30,17 +30,36 @@ namespace QuickDelivery.Web.Pages.Recenzii
                 return NotFound();
             }
 
-            var recenzie =  await _context.Recenzii.FirstOrDefaultAsync(m => m.Id == id);
+            // Includem Clientul pentru a putea verifica adresa de email a autorului recenziei
+            var recenzie = await _context.Recenzii
+                .Include(r => r.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (recenzie == null)
             {
                 return NotFound();
             }
+
+            // --- LOGICA DE SECURITATE ---
+            // Preluăm identitatea utilizatorului logat
+            var userEmail = User.Identity.Name;
+
+            // Verificăm permisiunile: dacă NU e Admin și NU este recenzia lui
+            if (!User.IsInRole("Admin") && recenzie.Client.Email != userEmail)
+            {
+                // Blocăm accesul dacă un client încearcă să editeze recenzia altcuiva
+                return Forbid();
+            }
+            // ------------------------------------
+
             Recenzie = recenzie;
-           ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
-           ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Adresa");
+
+            // Listele pentru Dropdown-uri
+            ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
+            ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume"); // Am schimbat în Nume pentru claritate
+
             return Page();
         }
-
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()

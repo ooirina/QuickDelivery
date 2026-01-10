@@ -27,5 +27,8 @@ namespace QuickDelivery.Web.Models
         // Această proprietate permite accesul la lista de produse din acest restaurant 1:N
         [JsonIgnore]
         public virtual ICollection<Produs>? Produse { get; set; }
+
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

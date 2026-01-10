@@ -1,12 +1,15 @@
 ﻿using QuickDelivery.Mobile.Models;
 using QuickDelivery.Mobile.Data;
-
+using Plugin.LocalNotification;
 namespace QuickDelivery.Mobile;
 
 [QueryProperty(nameof(RestaurantId), "restaurantId")]
+[QueryProperty(nameof(RestaurantName), "restaurantName")]
 public partial class ProdusePage : ContentPage
 {
     public int RestaurantId { get; set; }
+    public string RestaurantName { get; set; }
+    List<Produs> toateProdusele = new List<Produs>();
 
     public ProdusePage()
     {
@@ -16,58 +19,69 @@ public partial class ProdusePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
         var service = new RestService();
-        var produse = await service.GetProduseByRestaurantAsync(RestaurantId);
 
-        if (produse == null || produse.Count == 0)
-        {
-            await DisplayAlert("Info", "Nu sunt produse pentru acest restaurant", "OK");
-            return;
-        }
+        // 1. Luăm toate produsele restaurantului
+        toateProdusele = await service.GetProduseByRestaurantAsync(RestaurantId);
+        produseList.ItemsSource = toateProdusele;
 
-        produseList.ItemsSource = produse;
+        // 2. Luăm toate categoriile de pe server
+        var toateCategoriile = await service.GetCategoriesAsync();
+
+        // 3. FILTRARE: Păstrăm doar categoriile care au cel puțin un produs în acest restaurant
+        var categoriiSpecifice = toateCategoriile
+            .Where(cat => toateProdusele.Any(p => p.CategorieId == cat.Id))
+            .ToList();
+
+        categoriesList.ItemsSource = categoriiSpecifice;
+    }
+
+    private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is not Categorie selected) return;
+
+        if (selected.Id == 0)
+            produseList.ItemsSource = toateProdusele;
+        else
+            produseList.ItemsSource = toateProdusele.Where(p => p.CategorieId == selected.Id).ToList();
     }
 
     async void OnAddToCartClicked(object sender, EventArgs e)
     {
-        var produs = (sender as Button)?.CommandParameter as Produs;
-        if (produs == null) return;
+        if ((sender as Button)?.CommandParameter is not Produs produs) return;
 
-        // Luăm produsele existente în coș din SQLite
         var itemsInCart = await App.Database.GetItemsAsync();
-
-        // Dacă coșul nu e gol, verificăm dacă produsul nou e de la același restaurant
-        if (itemsInCart.Count > 0)
+        if (itemsInCart.Count > 0 && itemsInCart[0].RestaurantId != RestaurantId)
         {
-            if (itemsInCart[0].RestaurantId != RestaurantId)
-            {
-                bool answer = await DisplayAlert("Coș mixt",
-                    "Ai deja produse de la alt restaurant. Vrei să golești coșul și să adaugi acest produs?",
-                    "Da", "Nu");
-
-                if (answer)
-                {
-                    // Golim coșul vechi
-                    foreach (var item in itemsInCart)
-                        await App.Database.DeleteItemAsync(item);
-                }
-                else return;
-            }
+            bool answer = await DisplayAlert("Coș mixt", "Goliți coșul pentru acest restaurant?", "Da", "Nu");
+            if (answer)
+                foreach (var item in itemsInCart) await App.Database.DeleteItemAsync(item);
+            else return;
         }
 
-        // Adăugăm produsul nou
-        var itemCos = new CartItem
+        await App.Database.SaveItemAsync(new CartItem
         {
             ProdusId = produs.Id,
             RestaurantId = RestaurantId,
-            RestaurantName = "Nume Restaurant",
+            RestaurantName = RestaurantName,
             Nume = produs.Nume,
             Pret = (decimal)produs.Pret,
             Cantitate = 1
-        };
+        });
 
-        await App.Database.SaveItemAsync(itemCos);
-        await DisplayAlert("Succes", "Produs adăugat!", "OK");
+        //trimitere notificare
+        var request = new NotificationRequest
+        {
+            NotificationId = 1000,
+            Title = "Produs adăugat!",
+            Description = $"{produs.Nume} a fost adăugat în coșul tău.",
+            BadgeNumber = 1,
+            Schedule = { NotifyTime = DateTime.Now.AddSeconds(1) } // Apare după o secundă
+        };
+        await LocalNotificationCenter.Current.Show(request);
+        await DisplayAlert("Succes", $"{produs.Nume} a fost adăugat!", "OK");
     }
+
+    private async void OnViewReviewsClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new RecenziiPage(RestaurantId, RestaurantName));
 }

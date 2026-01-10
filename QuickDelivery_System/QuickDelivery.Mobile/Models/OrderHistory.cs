@@ -11,11 +11,11 @@ namespace QuickDelivery.Mobile.Models
     {
         [PrimaryKey, AutoIncrement]
         public int ID { get; set; }
-        public string OrderGroupId { get; set; }
+        public string OrderGroupId { get; set; } = string.Empty;
 
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
         public decimal Price { get; set; }
-        public string RestaurantName { get; set; }
+        public string RestaurantName { get; set; } = string.Empty;
         public DateTime OrderDate { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using QuickDelivery.Mobile.Models;
-
+//using Plugin.LocalNotification;
 namespace QuickDelivery.Mobile;
 
 public partial class CosPage : ContentPage
@@ -72,23 +72,28 @@ public partial class CosPage : ContentPage
     async void OnCheckoutClicked(object sender, EventArgs e)
     {
         var items = await App.Database.GetItemsAsync();
-        if (items.Count == 0) return;
+        if (items.Count == 0)
+        {
+            await DisplayAlert("Coș gol", "Nu poți finaliza comanda. Coșul este gol.", "OK");
+            return;
+        }
 
-        // Generăm un singur ID pentru toate produsele din această comandă
-        string orderId = Guid.NewGuid().ToString().Substring(0, 8);
+        // GENERARE ID NUMERIC (6 cifre)
+        Random rand = new Random();
+        string orderId = rand.Next(100000, 999999).ToString();
 
         foreach (var i in items)
         {
             var istoricNou = new OrderHistory
             {
-                OrderGroupId = orderId, // Legătura dintre produse
+                OrderGroupId = orderId, 
                 RestaurantName = i.RestaurantName,
                 ProductName = i.Nume,
-                Price = i.Pret, // Salvează prețul pentru istoric
+                Price = i.Pret, 
                 OrderDate = DateTime.Now
             };
             await App.Database.SaveHistoryAsync(istoricNou);
-            await App.Database.DeleteItemAsync(i); // Golim coșul
+            await App.Database.DeleteItemAsync(i); 
         }
 
         await DisplayAlert("Comandă Finalizată", $"Comanda ta cu ID-ul {orderId} a fost trimisă!", "OK");

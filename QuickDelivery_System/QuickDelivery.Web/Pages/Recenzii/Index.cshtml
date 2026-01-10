@@ -1,54 +1,48 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Recenzii.IndexModel
+@{ ViewData["Title"] = "Recenzii Clienți"; }
 
-@{
-    ViewData["Title"] = "Index";
-}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Ce spun clienții noștri</h2>
+        <a asp-page="Create" class="btn btn-success rounded-pill px-4">
+            + Adaugă Recenzie
+        </a>
+    </div>
 
-<h1>Index</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model.Recenzie) {
+        <div class="col">
+            <div class="card h-100 border-0 shadow-sm rounded-4 bg-white p-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="badge bg-warning text-dark rounded-pill px-3">
+                            <i class="bi bi-star-fill"></i> @item.Nota / 5
+                        </span>
+                        <small class="text-muted">#@item.Id</small>
+                    </div>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Recenzie[0].Nota)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recenzie[0].Comentariu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recenzie[0].Restaurant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recenzie[0].Client)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Recenzie) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nota)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentariu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Restaurant.Adresa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.Email)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <p class="card-text fs-5 text-dark mb-4">"@item.Comentariu"</p>
+
+                    <div class="border-top pt-3">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 fw-bold text-primary">@item.Client?.Nume</h6>
+                                <small class="text-muted"><i class="bi bi-shop"></i> @item.Restaurant.Nume</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-end gap-2">
+                    @if (User.IsInRole("Admin") || (User.Identity.IsAuthenticated && item.Client?.Email == User.Identity.Name))
+                        {
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill">Edit</a>
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-pill">View</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill">Delete</a>
+                        }
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>

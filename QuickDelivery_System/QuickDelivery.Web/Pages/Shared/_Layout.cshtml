@@ -35,7 +35,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 @* Logo-ul *@
                 <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">
@@ -45,7 +45,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark fw-semibold" asp-area="" asp-page="/Index">Home</a>
@@ -76,12 +76,12 @@
                         </li>
                     </ul>
                     @* Un buton de "Coș" simulat pentru aspect profesional *@
-                    <div class="d-flex">
+                   @* <div class="d-flex">
                         <a href="#" class="btn btn-outline-dark rounded-pill">
                             <i class="bi bi-cart3"></i> Coș
                         </a>
-                    </div>
-                    <div>
+                    </div>*@
+                    <div class="mt-2 mt-lg-0">
                         <partial name="_LoginPartial" />
                     </div>
                 </div>

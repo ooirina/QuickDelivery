@@ -56,7 +56,11 @@ namespace QuickDelivery.Web.Pages.Comenzi
             Comanda = comanda;
            ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
             ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
-            ViewData["ProdusId"] = new SelectList(_context.Produs, "Id", "Nume");
+            var listaProduse = _context.Produs.Include(p => p.Restaurant).ToList();
+
+            // Creăm SelectList-ul cu un parametru în plus pentru gruparea după numele restaurantului
+            // Parametrii sunt: (sursa, valoare, text afișat, selectat, numele câmpului de grupare)
+            ViewData["ProdusId"] = new SelectList(listaProduse, "Id", "Nume", null, "Restaurant.Nume");
             return Page();
         }
 

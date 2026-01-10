@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuickDelivery.Mobile.IstoricPage"
+             Title="Istoric Comenzi">
+    <CollectionView Grid.Row="1" x:Name="historyList" Margin="10" IsGrouped="True">
+
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate>
+                <Frame BackgroundColor="#512BD4" Margin="0,10,0,5" Padding="10" CornerRadius="5">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="{Binding RestaurantName}" TextColor="White" FontAttributes="Bold" FontSize="16"/>
+                        <Label Text="{Binding OrderDate, StringFormat='- {0:dd/MM/yyyy HH:mm}'}" 
+                           TextColor="LightGray" VerticalOptions="Center" FontSize="12"/>
+                    </HorizontalStackLayout>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Frame Margin="10,2" Padding="10" BorderColor="#E0E0E0" BackgroundColor="#F9F9F9">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Text="{Binding ProductName}" Grid.Column="0" VerticalOptions="Center" />
+                        <Label Text="{Binding Price, StringFormat='{0:F2} RON'}" 
+                           Grid.Column="1" FontAttributes="Bold" VerticalOptions="Center" />
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

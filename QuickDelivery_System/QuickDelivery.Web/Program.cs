@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddDbContext<QuickDeliveryWebContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("QuickDeliveryWebContext") ?? throw new InvalidOperationException("Connection string 'QuickDeliveryWebContext' not found.")));
@@ -122,7 +123,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -131,5 +132,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

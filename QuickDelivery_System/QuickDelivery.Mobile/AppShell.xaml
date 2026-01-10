@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="QuickDelivery.Mobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,9 +6,15 @@
     Shell.FlyoutBehavior="Disabled"
     Title="QuickDelivery.Mobile">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <TabBar>
+        <Tab Title="Restaurante">
+            <ShellContent Title="Home" ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />
+        </Tab>
+        <Tab Title="Coș">
+            <ShellContent Title="Coșul meu" ContentTemplate="{DataTemplate local:CosPage}" Route="CosPage" />
+        </Tab>
+        <Tab Title="Istoric">
+            <ShellContent Title="Istoric Comenzi" ContentTemplate="{DataTemplate local:IstoricPage}" Route="IstoricPage" />
+        </Tab>
+    </TabBar>
 </Shell>

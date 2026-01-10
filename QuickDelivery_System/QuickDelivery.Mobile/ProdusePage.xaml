@@ -1,0 +1,41 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuickDelivery.Mobile.ProdusePage"
+             Title="Meniu Restaurant">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Label Text="Produse Disponibile" 
+               FontSize="22" 
+               FontAttributes="Bold" 
+               HorizontalOptions="Center" 
+               Margin="10" 
+               Grid.Row="0" />
+
+        <CollectionView x:Name="produseList" 
+                        Grid.Row="1" 
+                        Margin="10">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="10" BorderColor="#512BD4">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Nume}" FontSize="18" FontAttributes="Bold" />
+                                <Label Text="{Binding Descriere}" FontSize="12" TextColor="Gray" />
+                                <Label Text="{Binding Pret, StringFormat='{0:F2} RON'}" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="1" 
+                                    Text="Adaugă" 
+                                    Clicked="OnAddToCartClicked" 
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="#FFC107" 
+                                    TextColor="Black" 
+                                    VerticalOptions="Center" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

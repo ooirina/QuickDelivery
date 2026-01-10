@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuickDelivery.Mobile.CosPage"
+             Title="Coșul meu">
+
+    <Grid RowDefinitions="*, Auto">
+        <CollectionView x:Name="cosList" Margin="15" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,8" Padding="15" CornerRadius="12" HasShadow="True" BorderColor="#E0E0E0">
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto">
+
+                            <VerticalStackLayout Grid.Column="0" Grid.RowSpan="2" VerticalOptions="Center" Spacing="5">
+                                <Label Text="{Binding Nume}" FontAttributes="Bold" FontSize="18" TextColor="#333333" />
+                                <Label Text="{Binding Pret, StringFormat='{0:F2} RON'}" TextColor="#512BD4" FontSize="16" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+
+                            <HorizontalStackLayout Grid.Column="1" Grid.Row="0" Spacing="12" HorizontalOptions="End" VerticalOptions="Start">
+                                <Button Text="-" 
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="20" FontAttributes="Bold"
+                                        BackgroundColor="#F0F0F0" TextColor="#512BD4"
+                                        Clicked="OnDecreaseClicked" CommandParameter="{Binding .}" />
+
+                                <Label Text="{Binding Cantitate}" 
+                                       VerticalOptions="Center" FontSize="18" FontAttributes="Bold" WidthRequest="25" HorizontalTextAlignment="Center"/>
+
+                                <Button Text="+" 
+                                        WidthRequest="40" HeightRequest="40" CornerRadius="20"
+                                        FontSize="20" FontAttributes="Bold"
+                                        BackgroundColor="#512BD4" TextColor="White"
+                                        Clicked="OnIncreaseClicked" CommandParameter="{Binding .}" />
+                            </HorizontalStackLayout>
+
+                            <Button Grid.Column="1" Grid.Row="1" 
+                                        Text="Elimină" 
+                                        FontSize="13"
+                                        TextColor="#FF3B30"
+                                        BackgroundColor="Transparent"
+                                        HorizontalOptions="End"
+                                        Margin="0,5,0,0"
+                                        Padding="0"
+                                        HeightRequest="30"
+                                        Clicked="OnDeleteItemClicked" 
+                                        CommandParameter="{Binding .}" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Frame Grid.Row="1" Padding="15" BackgroundColor="White" HasShadow="True" CornerRadius="0">
+            <Button Text="FINALIZEAZĂ COMANDA" 
+                     BackgroundColor="#FFC107" TextColor="Black" 
+                     HeightRequest="55" CornerRadius="25"
+                     FontAttributes="Bold" FontSize="16"
+                     Clicked="OnCheckoutClicked" />
+        </Frame>
+    </Grid>
+</ContentPage>

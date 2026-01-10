@@ -1,25 +1,42 @@
-﻿namespace QuickDelivery.Mobile
+﻿using QuickDelivery.Mobile.Data;
+using QuickDelivery.Mobile.Models;
+
+namespace QuickDelivery.Mobile;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    public MainPage()
     {
-        int count = 0;
+        InitializeComponent();
+    }
 
-        public MainPage()
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        try
         {
-            InitializeComponent();
+            var service = new RestService();
+            var restaurante = await service.GetRestaurantsAsync();
+
+            listView.ItemsSource = restaurante;
         }
-
-        private void OnCounterClicked(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            await DisplayAlert("Eroare", ex.Message, "OK");
         }
     }
 
+    // **Fix final: click funcțional pe restaurant**
+    private async void OnRestaurantTapped(object sender, EventArgs e)
+    {
+        var frame = sender as Frame;
+        if (frame == null) return;
+
+        var restaurant = frame.BindingContext as Restaurant;
+        if (restaurant == null) return;
+
+        // Navigare către ProdusePage
+        await Shell.Current.GoToAsync($"ProdusePage?restaurantId={restaurant.Id}");
+    }
 }

@@ -23,20 +23,13 @@ namespace QuickDelivery.Web.Pages.Categorii
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var categorie = await _context.Categorie.FirstOrDefaultAsync(m => m.Id == id);
-            if (categorie == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Categorie = categorie;
-            }
+            Categorie = await _context.Categorie
+                .Include(c => c.Produse) // Esențial pentru statistici!
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Categorie == null) return NotFound();
             return Page();
         }
     }

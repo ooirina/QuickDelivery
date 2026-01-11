@@ -23,20 +23,15 @@ namespace QuickDelivery.Web.Pages.Recenzii
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var recenzie = await _context.Recenzii.FirstOrDefaultAsync(m => m.Id == id);
-            if (recenzie == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Recenzie = recenzie;
-            }
+            Recenzie = await _context.Recenzii
+                .Include(r => r.Client)
+                .Include(r => r.Restaurant)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Recenzie == null) return NotFound();
+
             return Page();
         }
     }

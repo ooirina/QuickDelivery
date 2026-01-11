@@ -23,20 +23,16 @@ namespace QuickDelivery.Web.Pages.Produse
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var produs = await _context.Produs.FirstOrDefaultAsync(m => m.Id == id);
-            if (produs == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                Produs = produs;
-            }
+            // Folosim .Include pentru a încărca datele din tabelele legate
+            Produs = await _context.Produs
+                .Include(p => p.Restaurant)
+                .Include(p => p.Categorie)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (Produs == null) return NotFound();
+
             return Page();
         }
     }

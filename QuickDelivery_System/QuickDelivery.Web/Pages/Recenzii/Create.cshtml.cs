@@ -23,8 +23,8 @@ namespace QuickDelivery.Web.Pages.Recenzii
 
         public IActionResult OnGet()
         {
-        ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Email");
-        ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Adresa");
+        ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Nume");
+        ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
             return Page();
         }
 

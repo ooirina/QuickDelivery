@@ -1,43 +1,27 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Recenzii.DetailsModel
-
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Recenzie</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recenzie.Nota)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recenzie.Nota)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recenzie.Comentariu)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recenzie.Comentariu)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recenzie.Restaurant)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recenzie.Restaurant.Adresa)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Recenzie.Client)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Recenzie.Client.Email)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Recenzie.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+<div class="container mt-5">
+    <div class="card border-0 shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body text-center">
+            <h2 class="text-info mb-3">Detalii Recenzie</h2>
+            <hr />
+            <div class="mb-4">
+                <div class="display-4 text-warning">@Model.Recenzie.Nota / 5</div>
+                <p class="text-muted">Nota acordată de <strong>@Model.Recenzie.Client?.Nume</strong></p>
+            </div>
+            <blockquote class="blockquote bg-light p-3 rounded">
+                <p>"@Model.Recenzie.Comentariu"</p>
+            </blockquote>
+            <p class="text-start"><strong>Restaurant:</strong> @Model.Recenzie.Restaurant.Nume</p>
+            <hr />
+            <div class="d-flex justify-content-around">
+                <a asp-page="./Index" class="btn btn-secondary">Înapoi</a>
+                <a asp-page="./Edit" asp-route-id="@Model.Recenzie.Id" class="btn btn-warning">Editează</a>
+            </div>
+        </div>
+    </div>
 </div>

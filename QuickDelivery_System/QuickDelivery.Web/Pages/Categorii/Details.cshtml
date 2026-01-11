@@ -1,31 +1,59 @@
 ﻿@page
 @model QuickDelivery.Web.Pages.Categorii.DetailsModel
-
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalii Categorie";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
 
-<div>
-    <h4>Categorie</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Categorie.Nume)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Categorie.Nume)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Categorie.Iconita)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Categorie.Iconita)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Categorie.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <div class="rounded-4 p-5 mb-4 shadow-sm text-white"
+         style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
+        <small class="text-uppercase opacity-75 fw-bold">Detalii Categorie</small>
+        <h1 class="display-4 fw-bold mb-2">@Model.Categorie.Nume</h1>
+        <p class="lead mb-0">Gestionează și vizualizează parametrii pentru această secțiune specială.</p>
+    </div>
+
+    <div class="row">
+       <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-light rounded-circle p-2 me-3">
+                            <i class="bi bi-info-circle-fill text-primary fs-4"></i>
+                        </div>
+                        <h4 class="card-title mb-0 fw-bold text-dark">Informații Gestiune</h4>
+                    </div>
+
+                    <div class="row border-bottom py-3">
+                        <div class="col-sm-4 text-muted fw-semibold">ID Categorie</div>
+                        <div class="col-sm-8 text-end">
+                            <span class="badge bg-dark rounded-pill px-3">#@Model.Categorie.Id</span>
+                        </div>
+                    </div>
+
+                    <div class="row border-bottom py-3">
+                        <div class="col-sm-4 text-muted fw-semibold">Nume Afișat</div>
+                        <div class="col-sm-8 text-end text-dark fw-bold">@Model.Categorie.Nume</div>
+                    </div>
+
+                    <div class="row py-3">
+                        <div class="col-sm-4 text-muted fw-semibold">Status Sistem</div>
+                        <div class="col-sm-8 text-end text-success fw-bold">
+                            <i class="bi bi-check-circle-fill"></i> Activă
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="d-flex gap-3 mt-4">
+        <a asp-page="./Index" class="btn btn-light rounded-pill px-4 py-2 border shadow-sm">
+            <i class="bi bi-arrow-left"></i> Înapoi la Listă
+        </a>
+        <a asp-page="./Edit" asp-route-id="@Model.Categorie.Id" class="btn btn-warning rounded-pill px-4 py-2 shadow-sm fw-bold">
+            <i class="bi bi-pencil-square"></i> Modifică Categoria
+        </a>
+    </div>
 </div>

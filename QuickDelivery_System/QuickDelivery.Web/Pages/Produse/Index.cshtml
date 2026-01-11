@@ -10,7 +10,7 @@
     @* Secțiune Categorii cu Imagini din folderul local *@
     <div class="mb-5">
         <h4 class="fw-bold mb-3">Ce ai poftă să mănânci?</h4>
-        <div class="d-flex overflow-auto pb-3 gap-3" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <div class="d-flex flex-nowrap overflow-x-auto pb-3 gap-4" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
 
             @* Buton pentru resetare filtru *@
             <a asp-page="./Index" class="category-card text-decoration-none shadow-sm">
@@ -67,13 +67,27 @@
                             <span class="small fw-bold">@item.Restaurant?.Nume</span>
                         </div>
                     </div>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <div class="card-footer bg-white border-0 pb-3 d-flex gap-2">
-                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1">Editează</a>
-                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill flex-grow-1">Șterge</a>
-                        </div>
-                    }
+
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between gap-2 pb-3 px-3">
+                        <a asp-page="./Details" asp-route-id="@item.Id"
+                           class="btn btn-outline-info flex-grow-1 rounded-pill d-flex align-items-center justify-content-center shadow-sm"
+                           style="height: 38px;">
+                            Detalii
+                        </a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-page="./Edit" asp-route-id="@item.Id"
+                               class="btn btn-outline-warning flex-grow-1 rounded-pill d-flex align-items-center justify-content-center shadow-sm"
+                               style="height: 38px;">
+                                Editează
+                            </a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id"
+                               class="btn btn-outline-danger flex-grow-1 rounded-pill d-flex align-items-center justify-content-center shadow-sm"
+                               style="height: 38px;">
+                                Șterge
+                            </a>
+                          }
+                    </div>
                 </div>
             </div>
         }

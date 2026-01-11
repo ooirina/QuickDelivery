@@ -66,9 +66,12 @@ namespace QuickDelivery.Web.Pages.Recenzii
         {
             if (!ModelState.IsValid)
             {
+                
+                ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
                 return Page();
             }
 
+        
             _context.Attach(Recenzie).State = EntityState.Modified;
 
             try
@@ -87,9 +90,9 @@ namespace QuickDelivery.Web.Pages.Recenzii
                 }
             }
 
+            
             return RedirectToPage("./Index");
         }
-
         private bool RecenzieExists(int id)
         {
             return _context.Recenzii.Any(e => e.Id == id);

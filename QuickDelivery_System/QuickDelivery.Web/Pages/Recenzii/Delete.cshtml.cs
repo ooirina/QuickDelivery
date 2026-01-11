@@ -32,6 +32,7 @@ namespace QuickDelivery.Web.Pages.Recenzii
             // Adăugăm .Include(r => r.Client) pentru a putea verifica email-ul autorului
             var recenzie = await _context.Recenzii
                 .Include(r => r.Client)
+                .Include(r => r.Restaurant)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (recenzie == null)
@@ -41,10 +42,10 @@ namespace QuickDelivery.Web.Pages.Recenzii
 
             // --- LOGICA DE SECURITATE ---
             // Preluăm email-ul utilizatorului logat
-            var userEmail = User.Identity.Name;
+            var userEmail = User.Identity?.Name;
 
             // Dacă utilizatorul NU este Admin ȘI email-ul autorului recenziei NU coincide cu cel logat
-            if (!User.IsInRole("Admin") && recenzie.Client.Email != userEmail)
+            if (!User.IsInRole("Admin") && recenzie.Client?.Email != userEmail)
             {
                 // Blocăm accesul la pagina de ștergere
                 return Forbid();

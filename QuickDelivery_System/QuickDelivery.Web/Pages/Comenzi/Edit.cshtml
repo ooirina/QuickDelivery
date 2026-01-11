@@ -25,14 +25,15 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="Comanda.RestaurantId" class="control-label">Restaurant</label>
-                <select asp-for="Comanda.RestaurantId" class="form-control" asp-items="ViewBag.RestaurantId"></select>
+                <label  asp-for="Comanda.RestaurantId" class="control-label">Restaurant</label>
+                <select id="selectRestaurant" asp-for="Comanda.RestaurantId" class="form-control" asp-items="ViewBag.RestaurantId"></select>
                 <span asp-validation-for="Comanda.RestaurantId" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
                 <label asp-for="Comanda.ProdusId" class="control-label">Mâncare (Produs)</label>
-                <select asp-for="Comanda.ProdusId" class="form-control" asp-items="ViewBag.ProdusId"></select>
+                <select id="selectProdus" asp-for="Comanda.ProdusId" class="form-control" asp-items="ViewBag.ProdusId">
+                </select>
                 <span asp-validation-for="Comanda.ProdusId" class="text-danger"></span>
             </div>
 
@@ -78,4 +79,34 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+   <script>
+    document.getElementById("selectRestaurant").addEventListener("change", function () {
+        var resId = this.value;
+        var pSelect = document.getElementById("selectProdus");
+
+       
+
+        pSelect.innerHTML = '<option value="">-- Se încarcă... --</option>';
+
+        if (resId) {
+            // Handler-ul trebuie să se numească exact ca în .cs (fără OnGet)
+            fetch(`?handler=ProduseFiltrate&restaurantId=${resId}`)
+                .then(response => response.json())
+                .then(data => {
+                    pSelect.innerHTML = '<option value="">-- Selectează Produs --</option>';
+                    data.forEach(p => {
+                        var opt = document.createElement("option");
+                        opt.value = p.id;
+                        opt.text = p.nume + " (" + p.pret + " RON)";
+                        pSelect.appendChild(opt);
+                    });
+                })
+                .catch(err => console.error("Eroare API:", err));
+        } else {
+            pSelect.innerHTML = '<option value="">-- Mai întâi alege un restaurant --</option>';
+        }
+    });
+</script>
+
 }

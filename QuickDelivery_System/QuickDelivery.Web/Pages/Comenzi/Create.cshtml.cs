@@ -28,13 +28,22 @@ namespace QuickDelivery.Web.Pages.Comenzi
         {  //Încărcăm clienții și restaurantele normal
             ViewData["ClientId"] = new SelectList(_context.Client, "Id", "Nume");
             ViewData["RestaurantId"] = new SelectList(_context.Restaurant, "Id", "Nume");
-           // Pentru produse: le luăm din bază împreună cu datele restaurantului lor
-             var listaProduse = _context.Produs.Include(p => p.Restaurant).ToList();
-
-            // Creăm SelectList-ul cu un parametru în plus pentru gruparea după numele restaurantului
-            // Parametrii sunt: (sursa, valoare, text afișat, selectat, numele câmpului de grupare)
-            ViewData["ProdusId"] = new SelectList(listaProduse, "Id", "Nume", null, "Restaurant.Nume");
+            ViewData["ProdusId"] = new SelectList(_context.Produs, "Id", "Nume");
             return Page();
+        }
+        public JsonResult OnGetProduseFiltrate(int restaurantId)
+        {
+            // Luăm doar produsele care aparțin restaurantului selectat
+            var produse = _context.Produs
+                .Where(p => p.RestaurantId == restaurantId)
+                .Select(p => new {
+                    id = p.Id,
+                    nume = p.Nume,
+                    pret = p.Pret
+                })
+                .ToList();
+
+            return new JsonResult(produse);
         }
 
         [BindProperty]

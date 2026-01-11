@@ -1,73 +1,132 @@
-﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="QuickDelivery.Mobile.MainPage"
-             Title="Restaurante Disponibile">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="QuickDelivery.Mobile.MainPage"
+    Title="Restaurante">
 
-    <Grid RowDefinitions="Auto, Auto, *">
-        <Label Text="QuickDelivery - Restaurante" 
-           FontSize="22" 
-           FontAttributes="Bold"
-           HorizontalOptions="Center" 
-           Padding="10"/>
+    <!-- 🔴 LOGOUT – corect pentru Shell -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Logout"
+            Priority="0"
+            Order="Primary"
+            Clicked="OnLogoutClicked" />
+    </ContentPage.ToolbarItems>
 
-        <CollectionView x:Name="categoriesList"
-                Grid.Row="1"
-                HeightRequest="45"
-                SelectionMode="Single"
-                SelectionChanged="OnCategoryChanged"
-                Margin="10,0">
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Titlu -->
+        <Label
+            Grid.Row="0"
+            Text="QuickDelivery"
+            FontSize="22"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            Padding="10" />
+
+        <!-- Categorii -->
+        <CollectionView
+            x:Name="categoriesList"
+            Grid.Row="1"
+            HeightRequest="45"
+            SelectionMode="Single"
+            SelectionChanged="OnCategoryChanged"
+            Margin="10,0">
+
             <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+                <LinearItemsLayout
+                    Orientation="Horizontal"
+                    ItemSpacing="10" />
             </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="15,2" CornerRadius="15" BorderColor="#512BD4" BackgroundColor="#F0F0F0">
+                    <Frame
+                        Padding="15,4"
+                        CornerRadius="15"
+                        BorderColor="#512BD4">
+
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="CommonStates">
                                 <VisualState Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Property="BackgroundColor" Value="#512BD4" />
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="White" />
+                                        <Setter TargetName="catLabel"
+                                                Property="Label.TextColor"
+                                                Value="White" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState Name="Normal">
                                     <VisualState.Setters>
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="Black" />
+                                        <Setter Property="BackgroundColor" Value="#F0F0F0" />
+                                        <Setter TargetName="catLabel"
+                                                Property="Label.TextColor"
+                                                Value="Black" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Label x:Name="catLabel" Text="{Binding Nume}" VerticalOptions="Center" FontAttributes="Bold" />
+
+                        <Label
+                            x:Name="catLabel"
+                            Text="{Binding Nume}"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" />
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-            </CollectionView>
+        </CollectionView>
 
-            <!-- Lista de restaurante -->
-        <CollectionView x:Name="listView"
-                    Grid.Row="2"
-                    Margin="10"
-                    SelectionMode="None">
+        <!-- Lista restaurante -->
+        <CollectionView
+            x:Name="listView"
+            Grid.Row="2"
+            Margin="10"
+            SelectionMode="None">
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="0,5" Padding="15" CornerRadius="10" HasShadow="True" BorderColor="#512BD4">
+                    <Frame
+                        Margin="0,5"
+                        Padding="15"
+                        CornerRadius="10"
+                        BorderColor="#512BD4">
+
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnRestaurantTapped" CommandParameter="{Binding .}" />
+                            <TapGestureRecognizer
+                                Tapped="OnRestaurantTapped" />
                         </Frame.GestureRecognizers>
+
                         <HorizontalStackLayout Spacing="15">
-                            <Image Source="{Binding ImagineUrl, StringFormat='http://10.0.2.2:5132{0}'}" 
-                               WidthRequest="60" HeightRequest="60" Aspect="AspectFill" />
-                            <VerticalStackLayout WidthRequest="160">
-                                <Label Text="{Binding Nume}" FontSize="18" FontAttributes="Bold" />
-                                <Label Text="{Binding Adresa}" FontSize="11" TextColor="DimGray" />
-                                <Label Text="{Binding DistantaKm, StringFormat='{0:F1} km de tine'}"
-                                   FontSize="12" TextColor="Green" FontAttributes="Bold"/>
+                            <Image
+                                Source="{Binding ImagineUrl, StringFormat='http://10.0.2.2:5132{0}'}"
+                                WidthRequest="60"
+                                HeightRequest="60"
+                                Aspect="AspectFill" />
+
+                            <VerticalStackLayout>
+                                <Label
+                                    Text="{Binding Nume}"
+                                    FontSize="18"
+                                    FontAttributes="Bold" />
+
+                                <Label
+                                    Text="{Binding Adresa}"
+                                    FontSize="11"
+                                    TextColor="Gray" />
+
+                                <Label
+                                    Text="{Binding DistantaKm, StringFormat='{0:F1} km de tine'}"
+                                    FontSize="12"
+                                    TextColor="Green"
+                                    FontAttributes="Bold" />
                             </VerticalStackLayout>
                         </HorizontalStackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </Grid>
 
+    </Grid>
 </ContentPage>

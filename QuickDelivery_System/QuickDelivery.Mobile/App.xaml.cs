@@ -1,4 +1,5 @@
 ﻿using QuickDelivery.Mobile.Data;
+
 namespace QuickDelivery.Mobile
 {
     public partial class App : Application
@@ -10,16 +11,25 @@ namespace QuickDelivery.Mobile
             {
                 if (database == null)
                 {
-                    database = new Database(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "QuickDelivery.db3"));
+                    database = new Database(
+                        Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                            "QuickDelivery.db3"));
                 }
                 return database;
             }
         }
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
+
+            MainPage = isLoggedIn
+                ? new AppShell()
+                : new NavigationPage(new LoginPage());
         }
+
     }
 }

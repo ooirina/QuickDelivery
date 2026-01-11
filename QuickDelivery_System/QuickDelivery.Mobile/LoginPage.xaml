@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuickDelivery.Mobile.LoginPage"
+             Title="Login">
+    
+    <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="Center">
+        <Label Text="QuickDelivery Login" FontSize="24" HorizontalOptions="Center" />
+        <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
+        <Entry x:Name="PasswordEntry" Placeholder="Parolă" IsPassword="True" />
+        <Button Text="Conectare" Clicked="OnLoginClicked" BackgroundColor="#512BD4" />
+        <Button Text="Nu ai cont? Înregistrează-te" 
+        Clicked="OnGoToRegisterClicked" 
+        BackgroundColor="Transparent" 
+        TextColor="#512BD4" />
+    </VerticalStackLayout>
+</ContentPage>

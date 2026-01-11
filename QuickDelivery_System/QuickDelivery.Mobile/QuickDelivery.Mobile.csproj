@@ -62,8 +62,14 @@
 	<ItemGroup>
 		<MauiXaml Update="CosPage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="IstoricPage.xaml" Generator="MSBuild:Compile" />
+		<MauiXaml Update="LoginPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="ProdusePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="RecenziiPage.xaml" Generator="MSBuild:Compile" />
+		<MauiXaml Update="RegisterPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 </Project>

@@ -1,13 +1,15 @@
 ﻿using QuickDelivery.Mobile.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text;
+using System.Net.Http;
 
 namespace QuickDelivery.Mobile.Data
 {
     public class RestService
     {
         private readonly HttpClient client;
-        string Url = "http://10.0.2.2:5132/api/";
+        string Url = "http://10.0.2.2:5132/api/Restaurante";
 
         public RestService()
         {
@@ -99,24 +101,27 @@ namespace QuickDelivery.Mobile.Data
             return new List<Recenzie>();
         }
 
-        /*public async Task<bool> LoginAsync(string email, string password)
+        public async Task<bool> LoginAsync(string email, string password)
         {
-            try
-            {
-                var loginData = new { Email = email, Password = password };
-                var json = JsonConvert.SerializeObject(loginData);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using var client = new HttpClient();
 
-                [cite_start]// URL-ul va fi cel furnizat de colega ta 
-                            // Exemplu: "https://10.0.2.2:7000/api/auth/login"
-                var response = await _client.PostAsync("api/auth/login", content);
-
-                return response.IsSuccessStatusCode;
-            }
-            catch
+            var loginData = new
             {
-                return false;
-            }
-        }*/
+                Email = email,
+                Password = password
+            };
+
+            var json = JsonConvert.SerializeObject(loginData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(
+                "http://10.0.2.2:5132/api/Auth/login",
+                content);
+
+            return response.IsSuccessStatusCode;
+        }
+
     }
+
+
 }

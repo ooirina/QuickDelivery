@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuickDelivery.Mobile.RegisterPage"
+             Title="Creare Cont Nou">
+
+    <VerticalStackLayout Spacing="15" Padding="30" VerticalOptions="Center">
+        <Label Text="Creare Cont Nou" FontSize="24" HorizontalOptions="Center" />
+
+        <Entry x:Name="emailEntry" Placeholder="Email" Keyboard="Email" />
+        <Entry x:Name="passwordEntry" Placeholder="Parolă" IsPassword="True" />
+        <Entry x:Name="confirmPasswordEntry" Placeholder="Confirmă Parolă" IsPassword="True" />
+
+        <Button Text="Înregistrare" Clicked="OnRegisterClicked" />
+        <Button Text="Înapoi" Clicked="OnBackToLoginClicked" BackgroundColor="Transparent" TextColor="#512BD4" />
+    </VerticalStackLayout>
+</ContentPage>

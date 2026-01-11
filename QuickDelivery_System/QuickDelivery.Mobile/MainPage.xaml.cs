@@ -12,57 +12,60 @@ public partial class MainPage : ContentPage
     public MainPage()
     {
         InitializeComponent();
-
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        // Reset items source înainte
-        listView.ItemsSource = null;
-        categoriesList.ItemsSource = null;
-
-        await LoadDataAsync();
-    }
-
-
-    private async Task LoadDataAsync()
-    {
         try
         {
             var service = new RestService();
 
-            toateRestaurantele = await service.GetRestaurantsAsync();
+            // 1️⃣ Încărcăm restaurantele
+            var restaurante = await service.GetRestaurantsAsync();
+            toateRestaurantele = restaurante;
 
+            
+
+            if (!toateRestaurantele.Any())
+            {
+                await DisplayAlert("Debug", "Nu s-au primit restaurante de la server", "OK");
+            }
+            else
+            {
+                // arată doar numele pentru test
+                listView.ItemsSource = toateRestaurantele.Select(r => new { r.Nume, r.Adresa }).ToList();
+            }
             var userLocation = await GetUserLocationAsync();
+
             if (userLocation != null)
             {
                 foreach (var r in toateRestaurantele)
                 {
-                    r.DistantaKm = DistanceKm(
-                        userLocation.Latitude,
-                        userLocation.Longitude,
-                        r.Latitude,
-                        r.Longitude);
+                    // Forțăm calculul ca double pentru a evita InvalidCast
+                    double dist = DistanceKm(userLocation.Latitude, userLocation.Longitude, r.Latitude, r.Longitude);
+                    r.DistantaKm = dist;
                 }
-
-                toateRestaurantele = toateRestaurantele
-                    .OrderBy(r => r.DistantaKm)
-                    .ToList();
+                toateRestaurantele = toateRestaurantele.OrderBy(r => r.DistantaKm).ToList();
             }
 
+            // 🔹 Restaurantul cel mai apropiat primește 🏆
             if (toateRestaurantele.Any())
                 toateRestaurantele[0].Nume += " 🏆";
 
+            // Afișăm toate restaurantele la început
             listView.ItemsSource = toateRestaurantele;
 
-            var cats = await service.GetCategoriesAsync() ?? new();
+            var cats = await service.GetCategoriesAsync() ?? new List<Categorie>();
             if (!cats.Any(c => c.Id == 0))
                 cats.Insert(0, new Categorie { Id = 0, Nume = "Toate" });
 
             categoriesList.ItemsSource = cats;
-            categoriesList.SelectedItem = cats.First();
+
+            // Selectăm implicit "Toate"
+            if (cats.Any())
+                categoriesList.SelectedItem = cats[0];
         }
         catch (Exception ex)
         {
@@ -87,21 +90,15 @@ public partial class MainPage : ContentPage
 
     private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
     {
+        // ✅ Pattern matching sigur
         if (e.CurrentSelection.FirstOrDefault() is not Categorie selected)
             return;
 
-        if (selected.Id == 0) // TOATE
-        {
+        if (selected.Id == 0) // "Toate"
             listView.ItemsSource = toateRestaurantele;
-        }
         else
-        {
-            listView.ItemsSource = toateRestaurantele
-                .Where(r => r.CategorieId == selected.Id)
-                .ToList();
-        }
+            listView.ItemsSource = toateRestaurantele.Where(r => r.CategorieId == selected.Id).ToList();
     }
-
 
     private async void OnRestaurantTapped(object sender, EventArgs e)
     {
@@ -110,14 +107,4 @@ public partial class MainPage : ContentPage
 
         await Shell.Current.GoToAsync($"ProdusePage?restaurantId={restaurant.Id}&restaurantName={restaurant.Nume}");
     }
-
-    private async void OnLogoutClicked(object sender, EventArgs e)
-    {
-        Preferences.Clear();
-        // Forțează reinitializarea aplicației
-        Application.Current.MainPage = new NavigationPage(new LoginPage());
-    }
-
-
-
 }

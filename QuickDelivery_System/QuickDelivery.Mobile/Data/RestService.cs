@@ -1,15 +1,18 @@
-﻿using QuickDelivery.Mobile.Models;
+﻿
+using QuickDelivery.Mobile.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Text;
-using System.Net.Http;
+using Newtonsoft.Json;           // Pentru JsonConvert (Serializarea obiectelor în JSON)
+using System.Text;               // Pentru Encoding.UTF8
+using System.Net.Http;           // Pentru HttpClient, StringContent și HttpResponseMessage
+using System.Threading.Tasks;
 
 namespace QuickDelivery.Mobile.Data
 {
     public class RestService
     {
         private readonly HttpClient client;
-        string Url = "http://10.0.2.2:5132/api/Restaurante";
+        string Url = "http://10.0.2.2:5132/api/";
 
         public RestService()
         {
@@ -103,25 +106,20 @@ namespace QuickDelivery.Mobile.Data
 
         public async Task<bool> LoginAsync(string email, string password)
         {
-            using var client = new HttpClient();
-
-            var loginData = new
+            try
             {
-                Email = email,
-                Password = password
-            };
+                var loginData = new { Email = email, Password = password };
+                var json = JsonConvert.SerializeObject(loginData);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+\
+                var response = await client.PostAsync("api/auth/login", content);
 
-            var json = JsonConvert.SerializeObject(loginData);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync(
-                "http://10.0.2.2:5132/api/Auth/login",
-                content);
-
-            return response.IsSuccessStatusCode;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
-
     }
-
-
 }

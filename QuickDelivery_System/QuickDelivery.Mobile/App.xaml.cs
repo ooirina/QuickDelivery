@@ -24,12 +24,12 @@ namespace QuickDelivery.Mobile
         {
             InitializeComponent();
 
-            bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
+            /* bool isLoggedIn = Preferences.Get("IsLoggedIn", false);
 
-            MainPage = isLoggedIn
-                ? new AppShell()
-                : new NavigationPage(new LoginPage());
+             MainPage = isLoggedIn
+                 ? new AppShell()
+                 : new NavigationPage(new LoginPage());*/
+            MainPage = new AppShell();
         }
-
     }
 }

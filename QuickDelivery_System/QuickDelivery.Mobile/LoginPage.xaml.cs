@@ -35,20 +35,19 @@ public partial class LoginPage : ContentPage
         if (succes)
         {
             Preferences.Set("IsLoggedIn", true);
-            Application.Current.MainPage = new AppShell();
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Application.Current.MainPage = new AppShell();
+            });
         }
-
         else
         {
             await DisplayAlert("Eroare", "Date de logare incorecte!", "OK");
         }
     }
 
-
-
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RegisterPage());
     }
-
 }

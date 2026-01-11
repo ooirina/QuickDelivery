@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Preluăm string-urile de conexiune
 var connectionStringApp = builder.Configuration.GetConnectionString("QuickDeliveryWebContext");
 var connectionStringIdentity = builder.Configuration.GetConnectionString("IdentityContextConnection")
-                               ?? connectionStringApp; // Dacă nu găsește conexiunea ei, o folosește pe a ta
+                               ?? connectionStringApp; 
 
 // 1. Contextul pentru datele tale (Restaurante)
 builder.Services.AddDbContext<QuickDeliveryWebContext>(options =>

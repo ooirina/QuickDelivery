@@ -41,7 +41,7 @@ namespace QuickDelivery.Web.Pages.Categorii
             // 1. Generăm un nume unic pentru fișier ca să nu se suprascrie
             string numeFisier = Guid.NewGuid().ToString() + "_" + imagineIncarcata.FileName;
 
-            // 2. Stabilim calea unde salvăm (în folderul pe care l-ai creat deja)
+            // 2. Stabilim calea unde salvăm 
             string caleSalvare = Path.Combine(_environment.WebRootPath, "images", "categorii", numeFisier);
 
             // 3. Salvăm fizic fișierul pe disc

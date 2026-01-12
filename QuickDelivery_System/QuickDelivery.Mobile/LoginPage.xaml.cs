@@ -10,14 +10,11 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
+        // validări email/parolă
         if (string.IsNullOrWhiteSpace(EmailEntry.Text) ||
-            !EmailEntry.Text.Contains("@") ||
-            !EmailEntry.Text.Contains("."))
+            !EmailEntry.Text.Contains("@") || !EmailEntry.Text.Contains("."))
         {
-            await DisplayAlert(
-                "Eroare",
-                "Introdu un email valid (ex: nume@email.com)",
-                "OK");
+            await DisplayAlert("Eroare", "Introdu un email valid", "OK");
             return;
         }
 
@@ -28,13 +25,15 @@ public partial class LoginPage : ContentPage
         }
 
         var service = new Data.RestService();
-        bool succes = await service.LoginAsync(
-            EmailEntry.Text,
-            PasswordEntry.Text);
+        var token = await service.LoginAsync(EmailEntry.Text, PasswordEntry.Text);
 
-        if (succes)
+        if (!string.IsNullOrWhiteSpace(token))
         {
+            // ✅ Stocăm token-ul și flag-ul de login
             Preferences.Set("IsLoggedIn", true);
+            Preferences.Set("AuthToken", token);
+
+            // schimbăm MainPage către AppShell
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 Application.Current.MainPage = new AppShell();
@@ -45,6 +44,7 @@ public partial class LoginPage : ContentPage
             await DisplayAlert("Eroare", "Date de logare incorecte!", "OK");
         }
     }
+
 
     private async void OnGoToRegisterClicked(object sender, EventArgs e)
     {

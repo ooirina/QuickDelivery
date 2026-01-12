@@ -4,45 +4,15 @@
              x:Class="QuickDelivery.Mobile.MainPage"
              Title="Restaurante Disponibile">
 
-    <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto, *">
         <Label Text="QuickDelivery - Restaurante" 
            FontSize="22" 
            FontAttributes="Bold"
            HorizontalOptions="Center" 
            Padding="10"/>
 
-        <CollectionView x:Name="categoriesList"
-                Grid.Row="1"
-                HeightRequest="45"
-                SelectionMode="Single"
-                SelectionChanged="OnCategoryChanged"
-                Margin="10,0">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="15,2" CornerRadius="15" BorderColor="#512BD4" BackgroundColor="#F0F0F0">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="#512BD4" />
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="White" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="Black" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Label x:Name="catLabel" Text="{Binding Nume}" VerticalOptions="Center" FontAttributes="Bold" />
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+
+            
 
         <!-- Lista de restaurante -->
         <CollectionView x:Name="listView"
@@ -56,8 +26,8 @@
                             <TapGestureRecognizer Tapped="OnRestaurantTapped" CommandParameter="{Binding .}" />
                         </Frame.GestureRecognizers>
                         <HorizontalStackLayout Spacing="15">
-                            <Image Source="{Binding ImagineUrl, StringFormat='http://10.0.2.2:5132{0}'}" 
-                               WidthRequest="60" HeightRequest="60" Aspect="AspectFill" />
+                            <Image Source="{Binding ImagineUrl}" WidthRequest="60" HeightRequest="60" Aspect="AspectFill" />
+
                             <VerticalStackLayout WidthRequest="160">
                                 <Label Text="{Binding Nume}" FontSize="18" FontAttributes="Bold" />
                                 <Label Text="{Binding Adresa}" FontSize="11" TextColor="DimGray" />

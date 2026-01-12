@@ -1,8 +1,10 @@
-﻿using QuickDelivery.Mobile.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using QuickDelivery.Mobile.Models;
 using System.Diagnostics;
-using System.Text;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Threading.Tasks;
 
 namespace QuickDelivery.Mobile.Data
@@ -18,25 +20,32 @@ namespace QuickDelivery.Mobile.Data
             handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
             client = new HttpClient(handler);
         }
-
         public async Task<List<Restaurant>> GetRestaurantsAsync()
         {
+            using var client = new HttpClient();
+
+            var token = Preferences.Get("AuthToken", string.Empty);
+            if (!string.IsNullOrWhiteSpace(token))
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             try
             {
-                var response = await client.GetAsync($"{Url}Restaurante");
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Restaurant>>(json) ?? new List<Restaurant>();
-                }
-                Debug.WriteLine($"Error GET Restaurants: {response.StatusCode}");
+                var json = await client.GetStringAsync("http://10.0.2.2:5132/api/restaurante");
+                var lista = JsonConvert.DeserializeObject<List<Restaurant>>(json);
+                return lista ?? new List<Restaurant>();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Exception GET Restaurants: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine("Eroare RestService: " + ex.Message);
+                return new List<Restaurant>();
             }
-            return new List<Restaurant>();
         }
+
+
+
+
+
 
         public async Task<List<Produs>> GetProduseByRestaurantAsync(int restaurantId)
         {
@@ -57,43 +66,9 @@ namespace QuickDelivery.Mobile.Data
             return new List<Produs>();
         }
 
-        public async Task<List<Categorie>> GetCategoriesAsync()
-        {
-            try
-            {
-                var response = await client.GetAsync($"{Url}Categorii");
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Categorie>>(json) ?? new List<Categorie>();
-                }
-                Debug.WriteLine($"Error GET Categories: {response.StatusCode}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception GET Categories: {ex.Message}");
-            }
-            return new List<Categorie>();
-        }
+       
 
-        public async Task<List<Categorie>> GetCategoriesByRestaurantAsync(int restaurantId)
-        {
-            try
-            {
-                var response = await client.GetAsync($"{Url}Categorii/ByRestaurant/{restaurantId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Categorie>>(json) ?? new List<Categorie>();
-                }
-                Debug.WriteLine($"Error GET CategoriesByRestaurant: {response.StatusCode}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception GET CategoriesByRestaurant: {ex.Message}");
-            }
-            return new List<Categorie>();
-        }
+      
 
         public async Task<List<Recenzie>> GetRecenziiByRestaurantAsync(int restaurantId)
         {
@@ -114,22 +89,30 @@ namespace QuickDelivery.Mobile.Data
             return new List<Recenzie>();
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<string?> LoginAsync(string email, string password)
         {
-            try
+            var loginData = new
             {
-                var loginData = new { Email = email, Password = password };
-                var json = JsonConvert.SerializeObject(loginData);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                Email = email,
+                Password = password
+            };
 
-                var response = await client.PostAsync($"{Url}auth/login", content);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
+            using var client = new HttpClient();
+            var json = System.Text.Json.JsonSerializer.Serialize(loginData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("http://10.0.2.2:5132/api/Auth/login", content);
+
+            if (response.IsSuccessStatusCode)
             {
-                Debug.WriteLine($"Exception Login: {ex.Message}");
-                return false;
+                // primim token-ul din API
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return responseContent; // poate fi JWT
             }
+
+            return null;
         }
+
+
     }
 }

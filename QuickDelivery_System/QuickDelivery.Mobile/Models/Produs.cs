@@ -17,6 +17,5 @@ namespace QuickDelivery.Mobile.Models
         {
             get; set;
         }
-        public int CategorieId { get; set; }
     }
 }

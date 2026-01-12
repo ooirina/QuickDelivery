@@ -1,4 +1,5 @@
-﻿using QuickDelivery.Mobile.Models;
+﻿using Plugin.LocalNotification;
+using QuickDelivery.Mobile.Models;
 //using Plugin.LocalNotification;
 namespace QuickDelivery.Mobile;
 
@@ -86,17 +87,29 @@ public partial class CosPage : ContentPage
         {
             var istoricNou = new OrderHistory
             {
-                OrderGroupId = orderId, 
+                OrderGroupId = orderId,
                 RestaurantName = i.RestaurantName,
                 ProductName = i.Nume,
-                Price = i.Pret, 
+                Price = i.Pret,
                 OrderDate = DateTime.Now
             };
             await App.Database.SaveHistoryAsync(istoricNou);
-            await App.Database.DeleteItemAsync(i); 
+            await App.Database.DeleteItemAsync(i);
         }
 
         await DisplayAlert("Comandă Finalizată", $"Comanda ta cu ID-ul {orderId} a fost trimisă!", "OK");
         await RefreshList();
+
+        // 🔔 Trimite notificarea doar după plasarea comenzii
+        var request = new NotificationRequest
+        {
+            NotificationId = 1001, // un ID diferit de cel folosit la adăugarea în coș
+            Title = "Comanda ta este în preparare",
+            Description = $"Mulțumim pentru comanda {orderId}!",
+            BadgeNumber = 1,
+            Schedule = { NotifyTime = DateTime.Now.AddSeconds(1) } // apare imediat
+        };
+        await LocalNotificationCenter.Current.Show(request);
     }
+
 }

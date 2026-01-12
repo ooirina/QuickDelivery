@@ -3,45 +3,14 @@
              x:Class="QuickDelivery.Mobile.ProdusePage"
              Title="Meniu Restaurant">
 
-    <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto, *">
         <HorizontalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="20" Margin="10,5">
             <Label Text="Produse Disponibile" FontSize="22" FontAttributes="Bold" />
             <Button Text="Vezi Recenzii 💬" BackgroundColor="Transparent" TextColor="#512BD4" 
                     FontAttributes="Bold" Clicked="OnViewReviewsClicked" />
         </HorizontalStackLayout>
 
-        <CollectionView x:Name="categoriesList"
-                Grid.Row="1"
-                HeightRequest="45"
-                SelectionMode="Single"
-                SelectionChanged="OnCategoryChanged"
-                Margin="10,0">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Padding="15,2" CornerRadius="15" BorderColor="#512BD4" BackgroundColor="#F0F0F0">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="#512BD4" />
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="White" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter TargetName="catLabel" Property="Label.TextColor" Value="Black" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Label x:Name="catLabel" Text="{Binding Nume}" VerticalOptions="Center" FontAttributes="Bold" />
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+       
 
         <CollectionView x:Name="produseList" Grid.Row="2" Margin="10,0">
             <CollectionView.ItemTemplate>

@@ -22,8 +22,6 @@ public partial class ProdusePage : ContentPage
         if (!string.IsNullOrEmpty(RestaurantName)) this.Title = $"Meniu {RestaurantName}";
 
         var service = new RestService();
-        var categorii = await service.GetCategoriesByRestaurantAsync(RestaurantId);
-        categoriesList.ItemsSource = categorii;
 
         var produse = await service.GetProduseByRestaurantAsync(RestaurantId);
         if (produse == null || produse.Count == 0)
@@ -57,16 +55,14 @@ public partial class ProdusePage : ContentPage
             Pret = (decimal)produs.Pret,
             Cantitate = 1
         });
+
+
         await DisplayAlert("Succes", $"{produs.Nume} a fost adăugat în coș!", "OK");
     }
 
-    private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
-    {
-        var selected = e.CurrentSelection.FirstOrDefault() as Categorie;
-        if (selected == null) return;
-        produseList.ItemsSource = toateProdusele.Where(p => p.CategorieId == selected.Id).ToList();
-    }
 
+
+  
     private async void OnViewReviewsClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new RecenziiPage(RestaurantId, RestaurantName));

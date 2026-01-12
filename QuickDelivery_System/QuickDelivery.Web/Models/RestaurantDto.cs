@@ -1,25 +1,13 @@
-﻿using SQLite;
-
-namespace QuickDelivery.Mobile.Models
+﻿
+namespace QuickDelivery.Web.Models
 {
-    public class Restaurant
+    public class RestaurantDto
     {
-
         public int Id { get; set; }
-
         public string Nume { get; set; } = string.Empty;
-
         public string Adresa { get; set; } = string.Empty;
-
         public string ImagineUrl { get; set; } = string.Empty;
-
-
         public double? Latitude { get; set; }
-
         public double? Longitude { get; set; }
-
-
-        [Ignore] // SQLite nu o salvează
-        public double DistantaKm { get; set; }
     }
 }

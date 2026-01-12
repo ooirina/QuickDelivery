@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuickDelivery.Web.Data;
 using QuickDelivery.Web.Models;
+using DTO = QuickDelivery.Web.Models;
+
+
 
 namespace QuickDelivery.Web.Controllers
 {
@@ -21,21 +24,7 @@ namespace QuickDelivery.Web.Controllers
             _context = context;
         }
 
-        // GET: /Restaurante
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Restaurant>>> GetRestaurant()
-        {
-            // Am păstrat doar varianta cu Select pentru a evita bucla infinită (circular reference)
-            return await _context.Restaurant
-                .Select(r => new Restaurant
-                {
-                    Id = r.Id,
-                    Nume = r.Nume,
-                    Adresa = r.Adresa,
-                    ImagineUrl = r.ImagineUrl
-                })
-                .ToListAsync();
-        }
+        
 
         // GET: /Restaurante/5
         [HttpGet("{id}")]
@@ -51,34 +40,32 @@ namespace QuickDelivery.Web.Controllers
             return restaurant;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRestaurant(int id, Restaurant restaurant)
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetRestaurant()
         {
-            if (id != restaurant.Id)
-            {
-                return BadRequest();
-            }
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            _context.Entry(restaurant).State = EntityState.Modified;
-
-            try
+            var restaurants = await _context.Restaurant
+            .Select(r => new DTO.RestaurantDto
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RestaurantExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                Id = r.Id,
+                Nume = r.Nume,
+                Adresa = r.Adresa,
+                ImagineUrl = r.ImagineUrl.EndsWith(".jpg") || r.ImagineUrl.EndsWith(".png")
+                             ? baseUrl + r.ImagineUrl
+                             : baseUrl + r.ImagineUrl + ".jpg",
+                Latitude = r.Latitude,
+                Longitude = r.Longitude,
+            })
+            .ToListAsync();
 
-            return NoContent();
+
+            return Ok(restaurants);
         }
+
+
+
 
         [HttpPost]
         public async Task<ActionResult<Restaurant>> PostRestaurant(Restaurant restaurant)

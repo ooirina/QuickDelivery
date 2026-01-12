@@ -6,6 +6,11 @@
     Shell.FlyoutBehavior="Disabled"
     Title="QuickDelivery.Mobile">
 
+    <!-- Aici adaugi Toolbar-ul cu butonul de Logout -->
+    <Shell.ToolbarItems>
+        <ToolbarItem Text="Logout" Clicked="OnLogoutClicked" Priority="0" Order="Primary"/>
+    </Shell.ToolbarItems>
+
     <TabBar>
         <Tab Title="Restaurante">
             <ShellContent Title="Home" ContentTemplate="{DataTemplate local:MainPage}" Route="MainPage" />

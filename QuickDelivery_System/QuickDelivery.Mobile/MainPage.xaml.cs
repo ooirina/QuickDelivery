@@ -7,7 +7,6 @@ namespace QuickDelivery.Mobile;
 public partial class MainPage : ContentPage
 {
     List<Restaurant> toateRestaurantele = new List<Restaurant>();
-    List<Categorie> categorii = new List<Categorie>();
 
     public MainPage()
     {
@@ -20,50 +19,39 @@ public partial class MainPage : ContentPage
 
         try
         {
-            var service = new RestService();
-            
+            // --- TEST URL DIRECT ---
+            var testUrl = "http://10.0.2.2:5132/images/2bcd603b-47c1-4ce1-89f5-5e67feb5af19_185677-marty-restaurant.jpg";
 
-            // 1️⃣ Încarcă restaurantele
+            using var client = new HttpClient();
+            var response = await client.GetAsync(testUrl);
+
+            // Folosim Debug.WriteLine pentru a vedea rezultatul în Output
+            System.Diagnostics.Debug.WriteLine($"Status cod test URL: {response.StatusCode}");
+            if (response.IsSuccessStatusCode)
+            {
+                System.Diagnostics.Debug.WriteLine("Imaginea este accesibilă!");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Imaginea NU se poate accesa!");
+            }
+
+            // --- ÎNCĂRCARE RESTAURANTE ---
+            var service = new RestService();
             toateRestaurantele = await service.GetRestaurantsAsync();
 
-            if (!toateRestaurantele.Any())
-            {
-                await DisplayAlert("Debug", "Nu s-au primit restaurante de la server", "OK");
-            }
 
-            // 2️⃣ Set default distanțe
             foreach (var r in toateRestaurantele)
             {
-                r.DistantaKm = 0; // fallback dacă nu avem coordonate
-            }
-
-            var userLocation = await GetUserLocationAsync();
-            if (userLocation != null)
-            {
-                foreach (var r in toateRestaurantele)
+                // fallback dacă lipsește imagine
+                if (string.IsNullOrWhiteSpace(r.ImagineUrl))
                 {
-                    if (r.Latitude.HasValue && r.Longitude.HasValue)
-                    {
-                        r.DistantaKm = DistanceKm(userLocation.Latitude, userLocation.Longitude, r.Latitude.Value, r.Longitude.Value);
-                    }
+                    r.ImagineUrl = "https://via.placeholder.com/60";
                 }
-                toateRestaurantele = toateRestaurantele.OrderBy(r => r.DistantaKm).ToList();
             }
 
-            // 🔹 Mark restaurantul cel mai apropiat
-            if (toateRestaurantele.Any())
-                toateRestaurantele[0].Nume += " 🏆";
 
-            // 3️⃣ Afișează restaurantele
             listView.ItemsSource = toateRestaurantele;
-
-            // 4️⃣ Încarcă categoriile
-            categorii = await service.GetCategoriesAsync() ?? new List<Categorie>();
-            if (!categorii.Any(c => c.Id == 0))
-                categorii.Insert(0, new Categorie { Id = 0, Nume = "Toate" });
-
-            categoriesList.ItemsSource = categorii;
-            categoriesList.SelectedItem = categorii.FirstOrDefault();
         }
         catch (Exception ex)
         {
@@ -71,18 +59,8 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (e.CurrentSelection.FirstOrDefault() is not Categorie selected)
-            return;
 
-        if (selected.Id == 0) // "Toate"
-            listView.ItemsSource = toateRestaurantele;
-        else
-            listView.ItemsSource = toateRestaurantele
-                                    .Where(r => r.CategorieId == selected.Id)
-                                    .ToList();
-    }
+   
 
 
     private async Task<Location?> GetUserLocationAsync()

@@ -16,9 +16,9 @@ namespace QuickDelivery.Mobile.Models
 
         public int CategorieId { get; set; }   // ⚠️ OBLIGATORIU public set
 
-        public double Latitude { get; set; }
+        public double? Latitude { get; set; }
 
-        public double Longitude { get; set; }
+        public double? Longitude { get; set; }
 
         // ====== Date calculate local (nu vin din API / DB) ======
 

@@ -1,10 +1,8 @@
-﻿
-using QuickDelivery.Mobile.Models;
+﻿using QuickDelivery.Mobile.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using Newtonsoft.Json;           // Pentru JsonConvert (Serializarea obiectelor în JSON)
-using System.Text;               // Pentru Encoding.UTF8
-using System.Net.Http;           // Pentru HttpClient, StringContent și HttpResponseMessage
+using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace QuickDelivery.Mobile.Data
@@ -12,12 +10,11 @@ namespace QuickDelivery.Mobile.Data
     public class RestService
     {
         private readonly HttpClient client;
-        string Url = "http://10.0.2.2:5132/api/";
+        private readonly string Url = "http://10.0.2.2:5132/api/"; // Corect pentru emulator Android
 
         public RestService()
         {
             var handler = new HttpClientHandler();
-            // Permite conexiunea HTTPS pe emulator
             handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
             client = new HttpClient(handler);
         }
@@ -30,10 +27,14 @@ namespace QuickDelivery.Mobile.Data
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Restaurant>>(json);
+                    return JsonConvert.DeserializeObject<List<Restaurant>>(json) ?? new List<Restaurant>();
                 }
+                Debug.WriteLine($"Error GET Restaurants: {response.StatusCode}");
             }
-            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception GET Restaurants: {ex.Message}");
+            }
             return new List<Restaurant>();
         }
 
@@ -45,10 +46,14 @@ namespace QuickDelivery.Mobile.Data
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Produs>>(json);
+                    return JsonConvert.DeserializeObject<List<Produs>>(json) ?? new List<Produs>();
                 }
+                Debug.WriteLine($"Error GET Produse: {response.StatusCode}");
             }
-            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception GET Produse: {ex.Message}");
+            }
             return new List<Produs>();
         }
 
@@ -59,11 +64,15 @@ namespace QuickDelivery.Mobile.Data
                 var response = await client.GetAsync($"{Url}Categorii");
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Categorie>>(content);
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Categorie>>(json) ?? new List<Categorie>();
                 }
+                Debug.WriteLine($"Error GET Categories: {response.StatusCode}");
             }
-            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception GET Categories: {ex.Message}");
+            }
             return new List<Categorie>();
         }
 
@@ -71,23 +80,20 @@ namespace QuickDelivery.Mobile.Data
         {
             try
             {
-                var response = await client.GetAsync(
-                    $"{Url}Categorii/ByRestaurant/{restaurantId}");
-
+                var response = await client.GetAsync($"{Url}Categorii/ByRestaurant/{restaurantId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Categorie>>(content);
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Categorie>>(json) ?? new List<Categorie>();
                 }
+                Debug.WriteLine($"Error GET CategoriesByRestaurant: {response.StatusCode}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
+                Debug.WriteLine($"Exception GET CategoriesByRestaurant: {ex.Message}");
             }
-
             return new List<Categorie>();
         }
-
 
         public async Task<List<Recenzie>> GetRecenziiByRestaurantAsync(int restaurantId)
         {
@@ -96,11 +102,15 @@ namespace QuickDelivery.Mobile.Data
                 var response = await client.GetAsync($"{Url}Recenzies/Restaurant/{restaurantId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<Recenzie>>(content);
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<Recenzie>>(json) ?? new List<Recenzie>();
                 }
+                Debug.WriteLine($"Error GET Recenzii: {response.StatusCode}");
             }
-            catch (Exception ex) { Debug.WriteLine(ex.Message); }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception GET Recenzii: {ex.Message}");
+            }
             return new List<Recenzie>();
         }
 
@@ -111,13 +121,13 @@ namespace QuickDelivery.Mobile.Data
                 var loginData = new { Email = email, Password = password };
                 var json = JsonConvert.SerializeObject(loginData);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-\
-                var response = await client.PostAsync("api/auth/login", content);
 
+                var response = await client.PostAsync($"{Url}auth/login", content);
                 return response.IsSuccessStatusCode;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine($"Exception Login: {ex.Message}");
                 return false;
             }
         }

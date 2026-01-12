@@ -21,57 +21,69 @@ public partial class MainPage : ContentPage
         try
         {
             var service = new RestService();
-
-            // 1️⃣ Încărcăm restaurantele
-            var restaurante = await service.GetRestaurantsAsync();
-            toateRestaurantele = restaurante;
-
             
+
+            // 1️⃣ Încarcă restaurantele
+            toateRestaurantele = await service.GetRestaurantsAsync();
 
             if (!toateRestaurantele.Any())
             {
                 await DisplayAlert("Debug", "Nu s-au primit restaurante de la server", "OK");
             }
-            else
-            {
-                // arată doar numele pentru test
-                listView.ItemsSource = toateRestaurantele.Select(r => new { r.Nume, r.Adresa }).ToList();
-            }
-            var userLocation = await GetUserLocationAsync();
 
+            // 2️⃣ Set default distanțe
+            foreach (var r in toateRestaurantele)
+            {
+                r.DistantaKm = 0; // fallback dacă nu avem coordonate
+            }
+
+            var userLocation = await GetUserLocationAsync();
             if (userLocation != null)
             {
                 foreach (var r in toateRestaurantele)
                 {
-                    // Forțăm calculul ca double pentru a evita InvalidCast
-                    double dist = DistanceKm(userLocation.Latitude, userLocation.Longitude, r.Latitude, r.Longitude);
-                    r.DistantaKm = dist;
+                    if (r.Latitude.HasValue && r.Longitude.HasValue)
+                    {
+                        r.DistantaKm = DistanceKm(userLocation.Latitude, userLocation.Longitude, r.Latitude.Value, r.Longitude.Value);
+                    }
                 }
                 toateRestaurantele = toateRestaurantele.OrderBy(r => r.DistantaKm).ToList();
             }
 
-            // 🔹 Restaurantul cel mai apropiat primește 🏆
+            // 🔹 Mark restaurantul cel mai apropiat
             if (toateRestaurantele.Any())
                 toateRestaurantele[0].Nume += " 🏆";
 
-            // Afișăm toate restaurantele la început
+            // 3️⃣ Afișează restaurantele
             listView.ItemsSource = toateRestaurantele;
 
-            var cats = await service.GetCategoriesAsync() ?? new List<Categorie>();
-            if (!cats.Any(c => c.Id == 0))
-                cats.Insert(0, new Categorie { Id = 0, Nume = "Toate" });
+            // 4️⃣ Încarcă categoriile
+            categorii = await service.GetCategoriesAsync() ?? new List<Categorie>();
+            if (!categorii.Any(c => c.Id == 0))
+                categorii.Insert(0, new Categorie { Id = 0, Nume = "Toate" });
 
-            categoriesList.ItemsSource = cats;
-
-            // Selectăm implicit "Toate"
-            if (cats.Any())
-                categoriesList.SelectedItem = cats[0];
+            categoriesList.ItemsSource = categorii;
+            categoriesList.SelectedItem = categorii.FirstOrDefault();
         }
         catch (Exception ex)
         {
             await DisplayAlert("Eroare", ex.Message, "OK");
         }
     }
+
+    private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is not Categorie selected)
+            return;
+
+        if (selected.Id == 0) // "Toate"
+            listView.ItemsSource = toateRestaurantele;
+        else
+            listView.ItemsSource = toateRestaurantele
+                                    .Where(r => r.CategorieId == selected.Id)
+                                    .ToList();
+    }
+
 
     private async Task<Location?> GetUserLocationAsync()
     {
@@ -88,17 +100,7 @@ public partial class MainPage : ContentPage
         return Location.CalculateDistance(lat1, lon1, lat2, lon2, DistanceUnits.Kilometers);
     }
 
-    private void OnCategoryChanged(object sender, SelectionChangedEventArgs e)
-    {
-        // ✅ Pattern matching sigur
-        if (e.CurrentSelection.FirstOrDefault() is not Categorie selected)
-            return;
-
-        if (selected.Id == 0) // "Toate"
-            listView.ItemsSource = toateRestaurantele;
-        else
-            listView.ItemsSource = toateRestaurantele.Where(r => r.CategorieId == selected.Id).ToList();
-    }
+   
 
     private async void OnRestaurantTapped(object sender, EventArgs e)
     {
